@@ -1,0 +1,114 @@
+/**
+ * Copyright (c) 2012 Tauasa Timoteo. All rights reserved.
+ */
+package org.tauasa.web.smoke;
+
+import org.tauasa.commons.util.Utils;
+
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.slf4j.Logger;
+
+/**
+ * Abstract {@link ISmoketest} impl for testing JNDI resources
+ *
+ * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * 
+ */
+public abstract class AbstractJNDISmoketest extends AbstractSmoketest {
+
+	protected static final String DEFAULT_DELIMITER = ",";
+
+	public static final String JNDI_NAMES_DELIMITER_KEY = "jndi.names.delimiter";
+	public static final String JNDI_NAMES_KEY = "jndi.names";
+
+	protected String[] jndiNames;
+
+
+	protected LookupDelegate mLookupDelegate = new LookupDelegate(){
+		private Context mContext;
+		Logger log = getLogger();
+		public Object lookup(String jndiName) throws NamingException {
+			if(log.isInfoEnabled()){
+				log.info(String.format("Performing lookup on %s", jndiName));
+			}
+
+			return getContext().lookup(jndiName);
+		}
+		public Context getContext()throws NamingException{
+			if(mContext==null){
+				if(log.isInfoEnabled()){
+					log.info("Creating new InitialContext");
+				}
+				mContext = new InitialContext();
+			}
+			return mContext;
+		}
+	};
+
+	public AbstractJNDISmoketest() {
+
+	}
+
+	public AbstractJNDISmoketest(LookupDelegate delegate) {
+		setLookupDelegate(delegate);
+	}
+
+	/**
+	 * Initializes the local jndiNames attribute
+	 * */
+	@Override
+	public void init(Properties smoketestProperties)throws SmoketestConfigException{
+		super.init(smoketestProperties);
+		if(getLogger().isInfoEnabled()){
+			getLogger().info("Getting JNDI Names...");
+		}
+
+		jndiNames = getArrayProperty(smoketestProperties,
+				JNDI_NAMES_KEY,
+				getProperty(smoketestProperties, JNDI_NAMES_DELIMITER_KEY, DEFAULT_DELIMITER),
+				null);
+		if(getLogger().isInfoEnabled()){
+			getLogger().info(String.format("JNDI Names:\r\n%s", Utils.join(jndiNames, "\r\n")));
+		}
+	}
+
+	public String[] getJndiNames(){
+		return jndiNames;
+	}
+
+	public boolean isVerbose(){
+		return verbose;
+	}
+
+	public LookupDelegate getLookupDelegate() {
+		return mLookupDelegate;
+	}
+
+	public void setLookupDelegate(LookupDelegate lookupDelegate) {
+		this.mLookupDelegate = lookupDelegate;
+	}
+
+	/**
+	 * Performs a JNDI lookup for the given name using this class' LookupDelegate
+	 * */
+	protected Object lookup(String jndiName)throws NamingException{
+		if(getLogger().isInfoEnabled()){
+			getLogger().info("Looking up "+jndiName);
+		}
+		return mLookupDelegate.lookup(jndiName);
+	}
+
+	public static interface LookupDelegate{
+
+		public Context getContext()throws NamingException;
+
+		public Object lookup(String jndiName)throws NamingException;
+
+	}
+
+}
