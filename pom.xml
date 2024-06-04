@@ -47,7 +47,6 @@
 
 	<modules>
 		<module>tui-commons</module>
-		<module>tui-spring</module>
 		<module>tui-mail</module>
 		<module>tui-web</module>
 	</modules>
