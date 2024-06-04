@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>org.tauasa</groupId>
+		<artifactId>tui-java</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<artifactId>tui-web</artifactId>
+	<packaging>jar</packaging>
+	<name>Tui Web</name>
+	<description>
+	Generic, web-related stuff: servlets, filters, JSP-/JSTL-related resources and a robust, extensible smoke testing framework suitable for lightweight integration and availability tests
+	</description>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>org.tauasa</groupId>
+			<artifactId>tui-mail</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.tauasa</groupId>
+			<artifactId>tui-commons</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+	</dependencies>
+	
+</project>

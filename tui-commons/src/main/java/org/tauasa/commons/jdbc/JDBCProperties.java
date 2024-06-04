@@ -1,0 +1,66 @@
+/**
+ * Copyright (c) 2012 Tauasa Timoteo. All rights reserved.
+ */
+package org.tauasa.commons.jdbc;
+
+import org.tauasa.commons.util.XProperties;
+
+import java.util.Properties;
+
+
+/**
+ * {@link XProperties} subclass used for basic JDBC properties (Driver, URL, user credentials, etc)
+ *
+ * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * 
+ */
+public class JDBCProperties extends XProperties {
+
+	private static final long serialVersionUID = 1L;
+
+	public static final String DRIVER    	= "jdbc.driver";
+	public static final String URL       	= "jdbc.url";
+	public static final String USER      	= "jdbc.user";
+	public static final String PASS      	= "jdbc.pass";
+	public static final String INIT      	= "jdbc.init";
+	public static final String MAX       	= "jdbc.max";
+	public static final String TIMEOUT   	= "jdbc.timeout";
+	public static final String AUTO_COMMIT  = "jdbc.auto.commit";
+	public static final String TRACE     	= "jdbc.trace";
+
+	public JDBCProperties() {
+		super();
+	}
+
+	public JDBCProperties(Properties defaults) {
+		super(defaults);
+	}
+
+	public String getPassword() {return getProperty(PASS);}
+	public void setPassword(String pass){setProperty(PASS, pass);}
+
+	public String getUser() {return getProperty(USER);}
+	public void setUser(String dbUser) {setProperty(USER, dbUser);}
+
+	public String getDriver() {return getProperty(DRIVER);}
+	public void setDriver(String driver) {setProperty(DRIVER, driver);}
+
+	public String getUrl(){return getProperty(URL);}
+	public void setUrl(String url){setProperty(URL, url);}
+
+	public int getMaxConnections(){return getIntProperty(MAX);}
+	public void setMaxConnections(int i){setIntProperty(MAX, i);}
+
+	public int getInitConnections(){return getIntProperty(INIT);}
+	public void setInitConnections(int i){setIntProperty(INIT, i);}
+
+	public int getTimeout(){return getIntProperty(TIMEOUT);}
+	public void setTimeout(int i){setIntProperty(TIMEOUT, i);}
+
+	public boolean isAutoCommit(){return getBooleanProperty(AUTO_COMMIT, true);}
+	public void setAutoCommit(boolean b){setBooleanProperty(AUTO_COMMIT, b);}
+
+	public boolean isTrace(){return getBooleanProperty(TRACE, false);}
+	public void setTrace(boolean b){setBooleanProperty(TRACE, b);}
+
+}
