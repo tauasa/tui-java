@@ -1,5 +1,5 @@
 
-#tui-java#
+**tui-java**
 
-A collection of vanilla java tools and util stuffs I've collected and used over the years.
+Code archeology: collection of java util stuffs from the early 2010's
 
