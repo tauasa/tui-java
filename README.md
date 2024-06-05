@@ -1,5 +1,5 @@
 
 **tui-java**
 
-A collection of vanilla java util stuffs I used back in '00-'10
+Code archeology: collection of java util stuffs from the early 2010's
 
