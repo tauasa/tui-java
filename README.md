@@ -1,5 +1,5 @@
 
-#tui-java#
+**tui-java**
 
-A collection of vanilla java tools and util stuffs I've collected and used over the years.
+A collection of vanilla java util stuffs I used back in '00-'10
 
