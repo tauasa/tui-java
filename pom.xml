@@ -19,10 +19,6 @@
 		<url>http://www.tauasa.org/</url>
 	</organization>
 
-	<prerequisites>
-		<maven>3.1.1</maven>
-	</prerequisites>
-
 	<licenses>
 		<license>
 			<name>MIT</name>
@@ -265,7 +261,7 @@
 			<dependency>
 				<groupId>com.javadocmd</groupId>
 				<artifactId>simplelatlng</artifactId>
-				<version>RELEASE</version>
+				<version>1.4.0</version>
 			</dependency>
 
 			<dependency>
@@ -341,7 +337,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
