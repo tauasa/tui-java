@@ -58,7 +58,7 @@ public class Utils {
 	 * the specified key and value
 	 * */
 	public static <K, V> Map<K, V> createMap(K key, V value){
-		HashMap<K, V> map = new HashMap<K, V>();
+		HashMap<K, V> map = new HashMap<>();
 		map.put(key, value);
 		return map;
 	}
@@ -89,7 +89,7 @@ public class Utils {
 					String.format("start (%d) must be < end (%d) by at least the specified step (%d)",
 							start, end, step));
 		}
-		ArrayList<Integer> list = new ArrayList<Integer>();
+		ArrayList<Integer> list = new ArrayList<>();
 
 		for(int i = start; i < end+step ; i += step){
 			list.add(i);
@@ -110,7 +110,7 @@ public class Utils {
 	 * the specified keys and values
 	 * */
 	public static <K, V> Map<K, V> createMap(K[] key, V[] value){
-		HashMap<K, V> map = new HashMap<K, V>();
+		HashMap<K, V> map = new HashMap<>();
 		for(int i=0;i<key.length;i++){
 			map.put(key[i], value[i]);
 		}
@@ -150,7 +150,7 @@ public class Utils {
 	 * Returns true if the specified List is null or empty
 	 * */
 	public static final boolean isEmpty(List<?> list){
-		return (list==null || list.size()==0);
+		return (list==null || list.isEmpty());
 	}
 
 	/**
@@ -456,7 +456,7 @@ public class Utils {
 	public static Integer[] toIntegerArray(String... a) {
 		Integer[] arr = new Integer[a.length];
 		for (int i = 0; i < arr.length; i++) {
-			arr[i] = new Integer(a[i]);
+			arr[i] = Integer.valueOf(a[i]);
 		}
 		return arr;
 	}

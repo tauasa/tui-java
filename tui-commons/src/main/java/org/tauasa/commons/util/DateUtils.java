@@ -39,7 +39,7 @@ import org.joda.time.format.ISODateTimeFormat;
 /**
  * Utility class for working with the shitty Java {@link Date} and {@link Calendar} classes
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class DateUtils extends Utils {

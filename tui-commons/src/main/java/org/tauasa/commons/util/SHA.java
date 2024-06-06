@@ -28,7 +28,7 @@ import org.tauasa.commons.util.MessageDigestUtils.Digest;
 /**
  * Simple hash utility for generating various SHA hashes
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class SHA {

@@ -45,7 +45,7 @@ import org.slf4j.Logger;
  * Abstract {@link Filter} implementation that provides informative logging
  * several convenience methods
  * 
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  */
 public abstract class AbstractFilter implements Filter{
 

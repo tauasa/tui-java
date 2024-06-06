@@ -38,7 +38,7 @@ import javax.mail.util.ByteArrayDataSource;
 /**
  * An email attachment backed by a {@link MimeBodyPart}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class EmailAttachment implements Serializable {

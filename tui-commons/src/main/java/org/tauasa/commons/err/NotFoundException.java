@@ -26,7 +26,7 @@ package org.tauasa.commons.err;
 /**
  * TODO - document NotFoundException
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class NotFoundException extends Exception {

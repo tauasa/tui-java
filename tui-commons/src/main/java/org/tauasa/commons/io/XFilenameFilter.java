@@ -29,7 +29,7 @@ import java.io.FilenameFilter;
  * {@link FilenameFilter} implementation that filters on file name 
  * using a prefix and suffix
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XFilenameFilter implements FilenameFilter {

@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * Singleton factory for creating a {@link IMailService}. The implementation used can be defined
  * via the {@code mail.service.class} system property
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class MailServiceFactory {

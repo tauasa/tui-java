@@ -27,7 +27,7 @@ package org.tauasa.commons.gis;
 /**
  * Interface definition for a geocoding service
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public interface IGeocoder {

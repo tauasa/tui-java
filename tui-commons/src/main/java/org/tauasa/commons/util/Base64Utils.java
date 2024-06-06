@@ -27,7 +27,7 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * Simple Base64 encoder/decoder utility backed by {@link Base64} in the Apache Commons Codec project
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class Base64Utils extends Utils {

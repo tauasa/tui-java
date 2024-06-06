@@ -32,7 +32,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * Convenience wrapper for various {@link HttpServletRequest} attributes
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class RequestBean implements Serializable {

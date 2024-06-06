@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * Column names available in the {@link ResultSetMetaData} are mapped to the {@link DTO} property names. If column
  * names are unavailable the column index is used instead (starting at 1)
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class DTOCreator implements IObjectCreator<DTO> {

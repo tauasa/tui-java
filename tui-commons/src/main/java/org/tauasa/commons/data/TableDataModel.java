@@ -37,7 +37,7 @@ import org.tauasa.commons.util.Utils;
 /**
  * {@link IDataModel} implementation based on the {@link AbstractTableModel}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class TableDataModel extends AbstractTableModel implements IDataModel {

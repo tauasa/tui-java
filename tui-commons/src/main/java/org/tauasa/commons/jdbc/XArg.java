@@ -32,7 +32,7 @@ import java.util.Date;
 /**
  * Wrapper class for arbitrary data types that will be bound to a {@link PreparedStatement}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XArg implements Serializable {
@@ -66,50 +66,43 @@ public class XArg implements Serializable {
 	 * Binds this argument to the specified PreparedStatement
 	 * */
 	public void bind(PreparedStatement stmt, int index)throws SQLException{
-		if(type==Types.VARCHAR){
-
-			stmt.setString(index, value==null ? null : value.toString());
-
-		}else if(type==Types.DATE){
-
-			stmt.setDate(index, value==null ? null : new java.sql.Date(((Date)value).getTime()));
-
-		}else if(type==Types.TIMESTAMP){
-
-			stmt.setTimestamp(index, value==null ? null : new java.sql.Timestamp(((Date)value).getTime()));
-
-		}else if(type==Types.INTEGER){
-
-			stmt.setInt(index, ((Number)value).intValue());
-
-		}else if(type==Types.FLOAT){
-
-			stmt.setFloat(index, ((Number)value).floatValue());
-
-		}else if(type==Types.DOUBLE){
-
-			stmt.setDouble(index, ((Number)value).doubleValue());
-
-		}else if(type==Types.DECIMAL){
-
-			if(value instanceof BigDecimal){
-
-				stmt.setBigDecimal(index, (BigDecimal)value);
-
-			}else if(value == null){
-
-				stmt.setNull(index, Types.NUMERIC);
-
-			}else{
-
+		switch (type) {
+			case Types.VARCHAR:
+				stmt.setString(index, value==null ? null : value.toString());
+				break;
+			case Types.DATE:
+				stmt.setDate(index, value==null ? null : new java.sql.Date(((Date)value).getTime()));
+				break;
+			case Types.TIMESTAMP:
+				stmt.setTimestamp(index, value==null ? null : new java.sql.Timestamp(((Date)value).getTime()));
+				break;
+			case Types.INTEGER:
+				stmt.setInt(index, ((Number)value).intValue());
+				break;
+			case Types.FLOAT:
+				stmt.setFloat(index, ((Number)value).floatValue());
+				break;
+			case Types.DOUBLE:
 				stmt.setDouble(index, ((Number)value).doubleValue());
-
-			}
-
-		}else{
-
-			stmt.setObject(index, value, type);
-
+				break;
+			case Types.DECIMAL:
+				if(value instanceof BigDecimal){
+					
+					stmt.setBigDecimal(index, (BigDecimal)value);
+					
+				}else if(value == null){
+					
+					stmt.setNull(index, Types.NUMERIC);
+					
+				}else{
+					
+					stmt.setDouble(index, ((Number)value).doubleValue());
+					
+				}
+				break;
+			default:
+				stmt.setObject(index, value, type);
+				break;
 		}
 
 	}
@@ -150,19 +143,19 @@ public class XArg implements Serializable {
 	}
 
 	public static XArg create(int value){
-		return new XArg(new Integer(value), Types.INTEGER);
+		return new XArg(value, Types.INTEGER);
 	}
 
 	public static XArg create(long value){
-		return new XArg(new Long(value), Types.INTEGER);
+		return new XArg(value, Types.BIGINT);
 	}
 
 	public static XArg create(float value){
-		return new XArg(new Float(value), Types.FLOAT);
+		return new XArg(value, Types.FLOAT);
 	}
 
 	public static XArg create(double value){
-		return new XArg(new Double(value), Types.DOUBLE);
+		return new XArg(value, Types.DOUBLE);
 	}
 
 	public int getType() {
@@ -173,11 +166,11 @@ public class XArg implements Serializable {
 		return value;
 	}
 
-	public void setType(int i) {
+	public final void setType(int i) {
 		type = i;
 	}
 
-	public void setValue(Object object) {
+	public final void setValue(Object object) {
 		value = object;
 	}
 

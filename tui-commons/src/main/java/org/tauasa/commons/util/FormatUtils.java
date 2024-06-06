@@ -29,7 +29,7 @@ import java.text.NumberFormat;
 /**
  * Formats {@link String} values into commonly-used formats
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class FormatUtils extends Utils{
@@ -83,30 +83,10 @@ public class FormatUtils extends Utils{
 	 * should be formatted
 	 * */
 	public static String format(String format, Object...args){
-		if(format!=null && format.indexOf("%s")!=-1 && !isEmpty(args)){
+		if(format!=null && format.contains("%s") && !isEmpty(args)){
 			return String.format(format, args);
 		}
 		return null;
-	}
-
-	public static String format(short n, String fmt){
-		return format(n, fmt);
-	}
-
-	public static String format(int n, String fmt){
-		return format(n, fmt);
-	}
-
-	public static String format(long n, String fmt){
-		return format(new Long(n), fmt);
-	}
-
-	public static String format(float n, String fmt){
-		return format(new Float(n), fmt);
-	}
-
-	public static String format(double n, String fmt){
-		return format(new Double(n), fmt);
 	}
 
 	public static String format(Number n, String fmt){
@@ -117,7 +97,7 @@ public class FormatUtils extends Utils{
 		return _format(n, fmt);
 	}
 
-	private static final String _format(Object obj, Format fmt){
+	private static String _format(Object obj, Format fmt){
 		return fmt.format(obj);
 	}
 

@@ -37,7 +37,7 @@ import org.tauasa.commons.io.IOUtils;
 /**
  * Generic JDBC utility methods
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class JDBCUtils extends IOUtils{

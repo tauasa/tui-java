@@ -35,7 +35,7 @@ import com.wcohen.ss.api.StringDistance;
  * currently uses the Jaro-Winkler algorithm but could easily be modified to use any 
  * other algorithm (e.g. Diff-Helman, etc)
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class StringDistanceUtils {

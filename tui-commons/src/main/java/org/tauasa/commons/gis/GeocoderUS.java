@@ -31,7 +31,7 @@ import org.tauasa.commons.util.Utils;
 /**
  * IGeocoder implementation that uses the geocoder.us service (http://geocoder.us/)
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class GeocoderUS extends AbstractGeocoder {

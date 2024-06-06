@@ -35,7 +35,7 @@ import org.slf4j.Logger;
  * logs the exception at the {@link Level#ERROR} level, and throws the {@link SmoketestException} wrapped
  * in a {@link ServletException}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class TerminalExceptionHandler extends DefaultExceptionHandler {

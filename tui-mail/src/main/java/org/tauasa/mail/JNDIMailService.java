@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /** 
  * {@link IMailService} implementation backed by a JNDI JavaMail {@link Session}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class JNDIMailService extends AbstractMailService {

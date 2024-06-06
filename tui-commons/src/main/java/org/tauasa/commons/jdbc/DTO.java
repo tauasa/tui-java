@@ -29,7 +29,7 @@ import java.util.Iterator;
 /**
  * {@link HashMap} subclass that acts as an arbitrary Data Transfer Object
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class DTO extends HashMap<String, Object> {
@@ -48,7 +48,7 @@ public class DTO extends HashMap<String, Object> {
 		populate(propertyNames, values);
 	}
 
-	public void populate(String[] propertyNames, Object[] values){
+	public final void populate(String[] propertyNames, Object[] values){
 		if(propertyNames==null){
 			throw new NullPointerException("propertyNames array is null");
 		}else if(values==null){
@@ -61,41 +61,41 @@ public class DTO extends HashMap<String, Object> {
 		}
 	}
 
-	public void setPropertyNames(String[] propertyNames){
+	public final void setPropertyNames(String[] propertyNames){
 		if(propertyNames==null){
 			throw new NullPointerException("propertyNames array is null");
 		}
-		for(int i=0;i<propertyNames.length;i++){
-			setProperty(propertyNames[i], null);
+		for (String propertyName : propertyNames) {
+			setProperty(propertyName, null);
 		}
 	}
 
 	public Object setProperty(String name, byte value){
-		return setProperty(name, new Byte(value));
+		return setProperty(name, Byte.valueOf(value));
 	}
 
 	public Object setProperty(String name, short value){
-		return setProperty(name, new Short(value));
+		return setProperty(name, Short.valueOf(value));
 	}
 
 	public Object setProperty(String name, int value){
-		return setProperty(name, new Integer(value));
+		return setProperty(name, Integer.valueOf(value));
 	}
 
 	public Object setProperty(String name, long value){
-		return setProperty(name, new Long(value));
+		return setProperty(name, Long.valueOf(value));
 	}
 
 	public Object setProperty(String name, float value){
-		return setProperty(name, new Float(value));
+		return setProperty(name, Float.valueOf(value));
 	}
 
 	public Object setProperty(String name, double value){
-		return setProperty(name, new Double(value));
+		return setProperty(name,  Double.valueOf(value));
 	}
 
 	public Object setProperty(String name, char value){
-		return setProperty(name, new Character(value));
+		return setProperty(name, Character.valueOf(value));
 	}
 
 
@@ -130,7 +130,7 @@ public class DTO extends HashMap<String, Object> {
 		Iterator<String> it = super.keySet().iterator();
 		int i=0;
 		while(it.hasNext()){
-			names[i] = it.next().toString();
+			names[i] = it.next();
 			i++;
 		}
 

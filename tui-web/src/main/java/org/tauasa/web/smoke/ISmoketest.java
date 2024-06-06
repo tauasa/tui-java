@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 /**
  * Smoke test contract
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public interface ISmoketest {

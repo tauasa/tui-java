@@ -30,7 +30,7 @@ import org.tauasa.commons.util.Utils;
 /**
  * Static utility methods that can be exposed to JSP's via /WEB-INF/functions.tld
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  */
 public class JSTL{
 

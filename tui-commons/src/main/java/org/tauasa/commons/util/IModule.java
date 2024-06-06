@@ -32,7 +32,7 @@ import java.util.Date;
  * application-/module-specific properties. Convenience methods are also
  * defined so system properties can be easily accessed as a specific type.
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  */
 public interface IModule {
 

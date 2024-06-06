@@ -55,7 +55,7 @@ import org.tauasa.commons.util.Utils;
  * MyBean bean = SpringApplicationContext.getBean("someBeanId", MyBean.class);
  * </code>
  * 
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a> 
+ * @author Tauasa Timoteo 
  *
  */
 public class SpringApplicationContext implements ApplicationContextAware {

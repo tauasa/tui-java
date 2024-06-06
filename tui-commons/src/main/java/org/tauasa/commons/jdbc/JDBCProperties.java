@@ -30,7 +30,7 @@ import java.util.Properties;
 /**
  * {@link XProperties} subclass used for basic JDBC properties (Driver, URL, user credentials, etc)
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class JDBCProperties extends XProperties {

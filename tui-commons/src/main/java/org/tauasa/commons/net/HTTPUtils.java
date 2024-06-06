@@ -23,7 +23,6 @@
 package org.tauasa.commons.net;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,11 +40,11 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-
 import org.tauasa.commons.io.XInputStreamReader;
 import org.tauasa.commons.util.Utils;
 import org.tauasa.commons.xml.XmlUtils;
+import org.w3c.dom.Document;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -53,7 +52,7 @@ import com.google.gson.JsonParser;
  * Static utility methods for performing HTTP GET and POST operations. This class
  * is backed by the Apache {@link HttpClient}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class HTTPUtils {
@@ -124,9 +123,7 @@ public class HTTPUtils {
 		PostMethod method = new PostMethod(strUrl);
 
 		if(!Utils.isEmpty(parameters)){
-			Iterator<String> keys = parameters.keySet().iterator();
-			while(keys.hasNext()){
-				String key = keys.next();
+			for (String key : parameters.keySet()) {
 				String val = parameters.get(key)==null ? "" : parameters.get(key).toString();
 				if(logger.isDebugEnabled()){
 					logger.debug(String.format("Parameter: %s=%s", key, val));
@@ -317,7 +314,7 @@ public class HTTPUtils {
 
 		public void addHeader(String name, String value){
 			if(headers==null){
-				headers = new HashMap<String, String>();
+				headers = new HashMap<>();
 			}
 			headers.put(name, value);
 		}
@@ -411,7 +408,7 @@ public class HTTPUtils {
 		}
 		protected void addHeader(String name, String value){
 			if(headers==null){
-				headers = new HashMap<String, String>();
+				headers = new HashMap<>();
 			}
 			headers.put(name.toLowerCase(), value);
 		}
@@ -445,7 +442,7 @@ public class HTTPUtils {
 		 * Returns the body of this response as a {@link JsonElement}
 		 * */
 		public JsonElement getBodyAsJson(){
-			return (new JsonParser()).parse(getBodyAsString());
+			return JsonParser.parseString(getBodyAsString());
 		}
 	}
 

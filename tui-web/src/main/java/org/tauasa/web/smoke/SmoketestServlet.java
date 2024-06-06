@@ -24,6 +24,7 @@ package org.tauasa.web.smoke;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ import org.tauasa.web.ServletHelper;
 /**
  * Invokes one or more {@link ISmoketest} implementations
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class SmoketestServlet extends HttpServlet{
@@ -245,9 +246,9 @@ public class SmoketestServlet extends HttpServlet{
 		}
 		logger.info("Creating ISmoketestResultsRenderer of type "+strRenderer);
 		try{
-			renderer = (ISmoketestResultsRenderer)Class.forName(strRenderer).newInstance();
+			renderer = (ISmoketestResultsRenderer)Class.forName(strRenderer).getConstructors()[0].newInstance();
 			renderer.init(smoketestProperties);//initialize
-		}catch(Exception e){
+		}catch(ClassNotFoundException | IllegalAccessException | InstantiationException | IllegalArgumentException | InvocationTargetException | SecurityException e){
 			logger.error("Could not create renderer instance of type "+strRenderer, e);
 			throw new ServletException(e);
 		}

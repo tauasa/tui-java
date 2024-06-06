@@ -27,7 +27,7 @@ package org.tauasa.web.smoke;
  * Exception raised during a {@link ISmoketest}. This class may contain a {@link SmoketestResult}
  * representing the results of the smoketest up until this exception was thrown
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class SmoketestException extends Exception {

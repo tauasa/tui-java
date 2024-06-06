@@ -43,7 +43,7 @@ import org.tauasa.commons.util.Utils;
  * <code>securityDomain</code> element should have it's <code>flushOnSessionInvalidate</code>
  * attribute set to true. (Reference: http://wiki.jboss.org/wiki/Wiki.jsp?page=CachingLoginCredentials)
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class LogoutFilter extends AbstractFilter {

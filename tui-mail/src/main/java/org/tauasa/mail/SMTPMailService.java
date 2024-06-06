@@ -49,7 +49,7 @@ import org.tauasa.commons.util.XProperties;
  * <ol><b>mail.smtp.writetimeout</b> - Socket write timeout value in milliseconds (default is infinite)</ol>
  * </ul>
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public final class SMTPMailService extends AbstractMailService{

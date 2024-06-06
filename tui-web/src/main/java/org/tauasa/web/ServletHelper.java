@@ -43,7 +43,7 @@ import javax.servlet.http.HttpSession;
  * convenience methods the {@link ServletContext}, {@link HttpServletRequest} and 
  * {@link HttpServletResponse} objects 
  * 
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class ServletHelper extends HttpServletResponseHelper{

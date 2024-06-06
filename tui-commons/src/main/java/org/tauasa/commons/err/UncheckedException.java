@@ -29,7 +29,7 @@ package org.tauasa.commons.err;
  * or implementing a fluent syntax or if you just hate handling checked 
  * exceptions) 
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class UncheckedException extends RuntimeException {

@@ -26,7 +26,7 @@ package org.tauasa.commons.util;
 /**
  * Contract for checking if two objects match
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public interface IMatcher<T> {
