@@ -32,7 +32,7 @@ import java.util.Date;
 /**
  * A timestamped message used for providing feedback from an {@link ISmoketest}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public final class SmoketestMessage {

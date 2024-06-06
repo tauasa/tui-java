@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Helper class for working with an {@link HttpServletResponse}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class HttpServletResponseHelper extends HttpServletRequestHelper{

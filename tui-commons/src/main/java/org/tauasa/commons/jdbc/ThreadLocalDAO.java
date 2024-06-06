@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * Thread-safe DAO implementation that utilizes a {@link ThreadLocal} to store/manage
  * a {@link JDBCResources} object.
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class ThreadLocalDAO {

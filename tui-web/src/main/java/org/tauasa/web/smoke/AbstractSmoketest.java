@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * times of of the test and provides a reference to an appropriate {@link Logger} via the {@link #getLogger()}
  * method. Concrete implementations just need to implement the {@link #doExecute(ServletHelper)} method.
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public abstract class AbstractSmoketest implements ISmoketest {

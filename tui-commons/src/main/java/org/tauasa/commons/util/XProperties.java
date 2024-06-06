@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  * {@link Properties} subclass that includes methods for type casting 
  * and property replacement
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XProperties extends Properties {
@@ -64,7 +64,7 @@ public class XProperties extends Properties {
 	}
 	
 	public static List<String> getSortedKeys(Properties props){
-		List<String> keys = new ArrayList<String>();
+		List<String> keys = new ArrayList<>();
 
 		Iterator<Object> names = props.keySet().iterator();
 		//sort the keys
@@ -86,7 +86,7 @@ public class XProperties extends Properties {
 	 * {@link Properties} object
 	 * */
 	public static List<String> getMatchingKeys(Properties props, String regex){
-		List<String> matches = new ArrayList<String>();
+		List<String> matches = new ArrayList<>();
 
 		Iterator<Object> keys = props.keySet().iterator();
 		
@@ -151,7 +151,7 @@ public class XProperties extends Properties {
 	 * Returns a property value as a Number object
 	 * */
 	public Number getNumberProperty(String key){
-		return new Double(getDoubleProperty(key));
+		return getDoubleProperty(key);
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class XProperties extends Properties {
 		if(!hasProperty(key)){
 			return _default;
 		}
-		return "true".equalsIgnoreCase(getProperty(key)) ? true : false;
+		return "true".equalsIgnoreCase(getProperty(key));
 
 	}
 

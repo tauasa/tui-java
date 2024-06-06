@@ -28,13 +28,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * A named wrapper class for a {@link Connection} and its associated resources (i.e.
  * {@link Statement}, {@link PreparedStatement}, {@link ResultSet}).
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public final class JDBCResources {
@@ -106,19 +105,13 @@ public final class JDBCResources {
 		closed = true;
 		try{
 
-			Iterator<ResultSet> rsIt = resultSets.values().iterator();
-			while(rsIt.hasNext()){
-				ResultSet rs = rsIt.next();
-				JDBCUtils.closeIgnoringException(rs);
-				rs=null;
-			}
+				for (ResultSet rs : resultSets.values()) {
+					JDBCUtils.closeIgnoringException(rs);
+				}
 
-			Iterator<Statement> stmtIt = statements.values().iterator();
-			while(stmtIt.hasNext()){
-				Statement stmt = stmtIt.next();
-				JDBCUtils.closeIgnoringException(stmt);
-				stmt=null;
-			}
+				for (Statement stmt : statements.values()) {
+					JDBCUtils.closeIgnoringException(stmt);
+				}
 
 		}finally{
 

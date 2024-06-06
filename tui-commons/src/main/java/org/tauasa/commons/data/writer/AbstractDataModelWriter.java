@@ -27,7 +27,7 @@ import java.io.OutputStream;
 /**
  * Abstract {@link IDataModelWriter} that outputs model data to an {@link OutputStream}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public abstract class AbstractDataModelWriter implements IDataModelWriter {

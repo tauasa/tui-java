@@ -35,7 +35,7 @@ import org.tauasa.web.ServletHelper;
 /**
  * {@link ServletHelper} subclass used for servlet filters
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class FilterHelper extends ServletHelper {

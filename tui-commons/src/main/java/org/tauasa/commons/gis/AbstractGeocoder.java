@@ -35,7 +35,7 @@ import org.tauasa.commons.util.Utils;
 /**
  * TODO - document AbstractGeocoder
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public abstract class AbstractGeocoder implements IGeocoder {

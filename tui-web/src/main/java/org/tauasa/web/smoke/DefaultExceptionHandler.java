@@ -35,7 +35,7 @@ import org.slf4j.Logger;
  * Sets the response status to {@link HttpServletResponse#SC_INTERNAL_SERVER_ERROR} and logs the
  * exception at {@link Level#ERROR} level.
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class DefaultExceptionHandler implements ISmoketestExceptionHandler {

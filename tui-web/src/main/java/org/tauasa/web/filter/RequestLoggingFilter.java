@@ -47,7 +47,7 @@ import org.tauasa.web.RequestBean;
  * invocation of the {@link FilterChain#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse)}
  * and when the method returns control.
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class RequestLoggingFilter extends AbstractFilter {

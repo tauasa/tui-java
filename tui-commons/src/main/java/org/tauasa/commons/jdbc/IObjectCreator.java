@@ -28,7 +28,7 @@ import java.sql.SQLException;
 /**
  * Creates/hydrates and object from the current row in a {@link ResultSet}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  *
  */
 public interface IObjectCreator<T> {

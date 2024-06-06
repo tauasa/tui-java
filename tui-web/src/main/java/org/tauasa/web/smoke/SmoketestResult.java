@@ -31,7 +31,7 @@ import java.util.Date;
  * Typed list containing the {@link SmoketestMessage} results of the {@link ISmoketest} as well as the start and end time
  * of the test
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class SmoketestResult extends ArrayList<SmoketestMessage> {

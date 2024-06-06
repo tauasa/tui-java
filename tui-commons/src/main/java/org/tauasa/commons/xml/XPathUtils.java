@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  * Static XPath utility methods
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XPathUtils extends XmlUtils {

@@ -48,7 +48,7 @@ import org.tauasa.web.smoke.SmoketestMessage.Type;
 /**
  * Renders test results in XHTML but uses jQuery to display results in a tabbed format
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {

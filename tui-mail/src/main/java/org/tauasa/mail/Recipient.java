@@ -33,7 +33,7 @@ import javax.mail.internet.InternetAddress;
 /**
  * An {@link EmailMessage} recipient
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class Recipient implements Serializable {

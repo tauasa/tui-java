@@ -34,7 +34,7 @@ import java.util.Date;
  * <P>
  * <b>NOTE:</b> To enable traversal, the target {@link ResultSet} must be of type {@link ResultSet#TYPE_SCROLL_INSENSITIVE}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class ResultSetDataModel implements IDataModel {

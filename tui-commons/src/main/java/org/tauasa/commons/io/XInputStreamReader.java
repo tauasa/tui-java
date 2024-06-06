@@ -31,7 +31,7 @@ import java.io.OutputStream;
  * Convenient utility class for reading an {@link InputStream} and/or piping
  * the contents of an {@link InputStream} to a corresponding {@link OutputStream}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XInputStreamReader {

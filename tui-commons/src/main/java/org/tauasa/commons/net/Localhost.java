@@ -27,7 +27,7 @@ import java.net.InetAddress;
 /**
  * Utility class for interrogating the localhost
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class Localhost {

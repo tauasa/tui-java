@@ -24,7 +24,7 @@ package org.tauasa.web.smoke;
 /**
  * {@link Exception} thrown if a {@link ISmoketest} is misconfigured
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class SmoketestConfigException extends SmoketestException {

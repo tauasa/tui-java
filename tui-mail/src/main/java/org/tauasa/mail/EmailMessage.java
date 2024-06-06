@@ -44,7 +44,7 @@ import javax.mail.internet.MimeUtility;
 /**
  * Simple POJO representing an email message
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class EmailMessage implements Serializable {

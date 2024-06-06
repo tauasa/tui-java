@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /** 
  * Sends a test email using the {@link JNDIMailService}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class JNDIMailServiceSmoketest extends AbstractJNDISmoketest {

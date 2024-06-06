@@ -12,7 +12,7 @@
 	Each library is a collection helper classes and/or third-party integrations
 	</description>
 	<url>http://www.tauasa.org/</url>
-	<inceptionYear>2011</inceptionYear>
+	<inceptionYear>2007</inceptionYear>
 
 	<organization>
 		<name>Tauasa Timoteo</name>
@@ -221,12 +221,6 @@
                 <artifactId>commons-math</artifactId>
                 <version>2.2</version>
             </dependency>
-
-			<dependency>
-				<groupId>org.jdom</groupId>
-				<artifactId>jdom</artifactId>
-				<version>2.0.2</version>
-			</dependency>
 
 			<dependency>
 				<groupId>junit</groupId>

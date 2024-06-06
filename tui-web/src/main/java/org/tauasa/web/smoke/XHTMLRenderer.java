@@ -48,7 +48,7 @@ import org.tauasa.web.smoke.SmoketestMessage.Type;
 /**
  * Simple {@link ISmoketestResultsRenderer} that renders smoke test results as an XHTML-formatted page
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XHTMLRenderer implements ISmoketestResultsRenderer {

@@ -28,7 +28,7 @@ import java.io.FileFilter;
 /**
  * {@link FileFilter} implementation that filters on file name
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XFileFilter extends XFilenameFilter implements FileFilter{

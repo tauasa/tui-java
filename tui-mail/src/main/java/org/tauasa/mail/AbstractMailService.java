@@ -44,7 +44,7 @@ import org.tauasa.commons.util.Utils;
  * Abstract and thread-safe {@link IMailService} implementation that stores a JavaMail {@link Session}
  * in a {@link ThreadLocal} attribute.
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public abstract class AbstractMailService implements IMailService {

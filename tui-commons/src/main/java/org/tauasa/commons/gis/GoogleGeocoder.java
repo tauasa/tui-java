@@ -35,7 +35,7 @@ import com.google.gson.JsonObject;
  * Results are fetched in JSON format (as opposed to XML).
  * 
  * @see https://developers.google.com/maps/documentation/geocoding/index
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public final class GoogleGeocoder extends AbstractGeocoder {

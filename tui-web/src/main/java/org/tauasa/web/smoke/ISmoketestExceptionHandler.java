@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 /**
  * Handles a {@link SmoketestException}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public interface ISmoketestExceptionHandler {

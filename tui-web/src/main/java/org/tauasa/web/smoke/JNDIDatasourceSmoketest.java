@@ -39,7 +39,7 @@ import javax.sql.DataSource;
  * Performs a lookup on one or more JNDI {@link DataSource}s and, optionally, executes a SQL
  * query against it
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class JNDIDatasourceSmoketest extends AbstractJNDISmoketest {

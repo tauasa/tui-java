@@ -42,6 +42,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.tauasa.commons.util.DateUtils;
+import org.tauasa.commons.util.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -51,13 +53,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.tauasa.commons.util.DateUtils;
-import org.tauasa.commons.util.Utils;
-
 /**
  * Static XML utility methods
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XmlUtils extends Utils {
@@ -234,7 +233,7 @@ public class XmlUtils extends Utils {
 		return null;
 	}
 
-	private static final String name(String namespace, String name){
+	private static String name(String namespace, String name){
 		return namespace==null ? name : namespace.concat(":").concat(name);
 	}
 
@@ -243,7 +242,7 @@ public class XmlUtils extends Utils {
 	 * the specified name or null if there is none.  If the parent matches the specified
 	 * name then the value of the parent node is returned.
 	 * */
-	public static final String findNodeValue(Node parent, String name){
+	public static String findNodeValue(Node parent, String name){
 		return findNodeValue(parent, null, name);
 	}
 
@@ -351,7 +350,7 @@ public class XmlUtils extends Utils {
 	public static final Node findRootNode(InputStream in){
 		try{
 			return findRootNode(createDocument(in));
-		}catch(Exception e){
+		}catch(IOException | ParserConfigurationException | SAXException e){
 			throw new RuntimeException(e);
 		}
 	}
@@ -359,7 +358,7 @@ public class XmlUtils extends Utils {
 	public static final Node findRootNode(InputSource in){
 		try{
 			return findRootNode(createDocument(in));
-		}catch(Exception e){
+		}catch(IOException | ParserConfigurationException | SAXException e){
 			throw new RuntimeException(e);
 		}
 	}
@@ -367,7 +366,7 @@ public class XmlUtils extends Utils {
 	public static final Node findRootNode(CharSequence xml){
 		try{
 			return findRootNode(createDocument(xml));
-		}catch(Exception e){
+		}catch(IOException | ParserConfigurationException | SAXException e){
 			throw new RuntimeException(e);
 		}
 	}
@@ -375,7 +374,7 @@ public class XmlUtils extends Utils {
 	public static final Node findRootNode(String xml){
 		try{
 			return findRootNode(createDocument(xml));
-		}catch(Exception e){
+		}catch(IOException | ParserConfigurationException | SAXException e){
 			throw new RuntimeException(e);
 		}
 	}
@@ -383,7 +382,7 @@ public class XmlUtils extends Utils {
 	public static final Node findRootNode(byte[] xml){
 		try{
 			return findRootNode(createDocument(xml));
-		}catch(Exception e){
+		}catch(IOException | ParserConfigurationException | SAXException e){
 			throw new RuntimeException(e);
 		}
 	}
@@ -430,7 +429,7 @@ public class XmlUtils extends Utils {
 		if(node==null){
 			return null;
 		}
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		NodeList children = node.getChildNodes();
 

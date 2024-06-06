@@ -40,7 +40,7 @@ import org.tauasa.commons.util.Utils;
 /**
  * {@link File} subclass that includes convenience I/O methods for
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class XFile extends File {

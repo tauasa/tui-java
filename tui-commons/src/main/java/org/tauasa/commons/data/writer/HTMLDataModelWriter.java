@@ -32,7 +32,7 @@ import java.io.OutputStream;
 /**
  * Simple {@link IDataModelWriter} implementation that writes an {@link IDataModel} as an HTML table
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class HTMLDataModelWriter extends AbstractDataModelWriter {

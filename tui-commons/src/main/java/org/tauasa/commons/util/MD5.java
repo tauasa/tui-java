@@ -26,7 +26,7 @@ package org.tauasa.commons.util;
 /**
  * Simple hash utility for generating an MD5 hash
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class MD5 {

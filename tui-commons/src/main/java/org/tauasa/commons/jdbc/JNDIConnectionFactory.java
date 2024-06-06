@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * {@link IConnectionFactory} implementation backed by a JNDI {@link DataSource}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class JNDIConnectionFactory implements IConnectionFactory {
@@ -60,6 +60,7 @@ public class JNDIConnectionFactory implements IConnectionFactory {
 		dataSource = (DataSource)ctx.lookup(jndiName);
 	}
 
+	@Override
 	public Connection getConnection() throws SQLException {
 		if(logger.isDebugEnabled()){
 			logger.debug("getConnection()");
@@ -67,6 +68,7 @@ public class JNDIConnectionFactory implements IConnectionFactory {
 		return dataSource.getConnection();
 	}
 
+	@Override
 	public void release()throws SQLException{
 		//nothing to do
 	}

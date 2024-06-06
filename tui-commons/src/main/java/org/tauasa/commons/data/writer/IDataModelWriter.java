@@ -32,7 +32,7 @@ import java.io.Writer;
 /**
  * Writes a {@link IDataModel}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public interface IDataModelWriter {

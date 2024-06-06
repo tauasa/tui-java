@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * objects using a specified URL, username and password. <strong>This class is only suitable
  * for rapid prototyping and should not be used in a production environment.</strong>
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=Tui Java API">tauasa@gmail.com</a>
+ * @author Tauasa Timoteo
  * 
  */
 public class SimpleConnectionFactory implements IConnectionFactory {
