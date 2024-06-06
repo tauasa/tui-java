@@ -50,7 +50,7 @@ public class MailServiceFactory {
 		if(logger.isDebugEnabled()){
 			logger.debug("Creating new instance of "+clazz);
 		}
-		service = (IMailService)Class.forName(clazz).newInstance();
+		service = (IMailService)Class.forName(clazz).getConstructors()[0].newInstance();
 	}
 
 	public static MailServiceFactory getInstance()throws Exception{

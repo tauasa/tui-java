@@ -24,7 +24,7 @@ package org.tauasa.commons.err;
 
 
 /**
- * TODO - document NotFoundException
+ * Thrown when an entity is not found
  *
  * @author Tauasa Timoteo
  * 

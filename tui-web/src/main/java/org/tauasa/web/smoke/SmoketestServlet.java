@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tauasa.commons.io.XInputStreamReader;
 import org.tauasa.commons.util.Utils;
 import org.tauasa.commons.util.XProperties;
@@ -115,22 +115,23 @@ public class SmoketestServlet extends HttpServlet{
 
 		ZipInputStream zipIn = new ZipInputStream(SmoketestServlet.class.getResourceAsStream(zipPath));
 
-		ZipEntry entry = null;
-
 		byte[] buffer = new byte[CACHE_BUFFER_SIZE];
+
+		ZipEntry entry;
 
 		while((entry=zipIn.getNextEntry())!=null){
 			String name = entry.getName();
-			ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-			int n;
-			while ((n = zipIn.read(buffer, 0, CACHE_BUFFER_SIZE)) > -1){
-				bOut.write(buffer, 0, n);
+			byte[] content;
+			try (ByteArrayOutputStream bOut = new ByteArrayOutputStream()) {
+				int n;
+				while ((n = zipIn.read(buffer, 0, CACHE_BUFFER_SIZE)) > -1){
+					bOut.write(buffer, 0, n);
+				}
+				content = bOut.toByteArray();
+				if(content.length==0){
+					continue;//skip empty content
+				}
 			}
-			byte[] content = bOut.toByteArray();
-			if(content.length==0){
-				continue;//skip empty content
-			}
-			bOut.close();
 			zipIn.closeEntry();
 
 			map.put(name, new CacheResource(getContentTypeForName(name), content));
@@ -164,10 +165,10 @@ public class SmoketestServlet extends HttpServlet{
 		logger.info("Writing cached resource "+resPath);
 
 		helper.setContentType(res.contentType);
-		ServletOutputStream out = helper.getOutputStream();
-		out.write(res.content);
-		out.flush();
-		out.close();
+            try (ServletOutputStream out = helper.getOutputStream()) {
+                out.write(res.content);
+                out.flush();
+            }
 	}
 
 	public static class CacheResource{
@@ -265,8 +266,8 @@ public class SmoketestServlet extends HttpServlet{
 		}
 		logger.info("Creating ISmoketestExceptionHandler of type "+strExceptionHandler);
 		try{
-			exceptionHandler = (ISmoketestExceptionHandler)Class.forName(strExceptionHandler).newInstance();
-		}catch(Exception e){
+			exceptionHandler = (ISmoketestExceptionHandler)Class.forName(strExceptionHandler).getConstructors()[0].newInstance();
+		}catch(ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | SecurityException | InvocationTargetException e){
 			logger.error("Could not create ISmoketestExceptionHandler instance of type "+strExceptionHandler, e);
 			throw new ServletException(e);
 		}
@@ -277,7 +278,7 @@ public class SmoketestServlet extends HttpServlet{
 		StringBuilder b = new StringBuilder()
 		.append("Error Message: ").append(e.getMessage()).append("\r\n");
 
-		if(e.getResult()!=null && e.getResult().size() > 0){
+		if(e.getResult()!=null && !e.getResult().isEmpty()){
 			b.append("===========================================\r\n")
 			.append("Results: ").append("\r\n");
 			for (SmoketestMessage msg : e.getResult()) {
@@ -299,7 +300,7 @@ public class SmoketestServlet extends HttpServlet{
 		.append("Server Info").append("\r\n");
 		try{
 			b.append("  +Host: ").append(InetAddress.getLocalHost().getHostName()).append("\r\n");
-		}catch(Exception e){
+		}catch(UnknownHostException e){
 			b.append("  +Host: ").append(e.getMessage()).append("\r\n");
 		}
 
@@ -334,10 +335,10 @@ public class SmoketestServlet extends HttpServlet{
 		//always stream resource as a plain text
 		helper.setContentType("text/plain");
 
-		ServletOutputStream out = helper.getOutputStream();
-		out.write(content);
-		out.flush();
-		out.close();
+		try (ServletOutputStream out = helper.getOutputStream()) {
+			out.write(content);
+			out.flush();
+		}
 
 	}
 
@@ -362,12 +363,12 @@ public class SmoketestServlet extends HttpServlet{
 		try{
 			InetAddress localhost = InetAddress.getLocalHost();
 			hostName = localhost.getHostName();
-		}catch(Throwable t){
+		}catch(UnknownHostException t){
 			throw new ServletException("Could not determine hostname");
 		}
 
 		if(!allowVirtualHost &&
-			helper.getRequestURL().toLowerCase().indexOf(hostName)==-1){
+			!helper.getRequestURL().toLowerCase().contains(hostName)){
 			//smoke test is configured to be accessed via real server
 			//name, not a virtual host (i.e. java.tauasa, www.tauasa)
 			logger.error(String.format("Smoketest must be accessed via %s, NOT %s", hostName, helper.getRequestURL()));
@@ -376,14 +377,14 @@ public class SmoketestServlet extends HttpServlet{
 			return;
 		}
 
-		ArrayList<SmoketestResult> results = new ArrayList<SmoketestResult>();
-		ArrayList<SmoketestException> exceptions = new ArrayList<SmoketestException>();
+		ArrayList<SmoketestResult> results = new ArrayList<>();
+		ArrayList<SmoketestException> exceptions = new ArrayList<>();
 
 		for (Class<? extends ISmoketest> clazz : smokeTests) {
 			ISmoketest test = null;
 			try{
 				logger.info("CREATING: "+clazz.getName());
-				test = clazz.newInstance();
+				test = (ISmoketest)clazz.getConstructors()[0].newInstance();
 				logger.info("INITIALIZING: "+clazz.getName());
 				test.init(smoketestProperties);
 				if(!test.isActive()){
@@ -404,7 +405,7 @@ public class SmoketestServlet extends HttpServlet{
 				results.add(e.getResult());
 				//store the exception in case we need to process if later on
 				exceptions.add(e);
-			}catch(Exception e){
+			}catch(IllegalAccessException | IllegalArgumentException | InstantiationException | SecurityException | InvocationTargetException e){
 				//an exception occurred that was not explicity
 				//handled in the smoke test - log the exception
 				//and re-throw the exception as a ServletException

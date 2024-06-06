@@ -24,7 +24,7 @@ package org.tauasa.commons.err;
 
 
 /**
- * TODO - document DuplicateException
+ * Thrown when a duplicate condition is not allowed
  *
  * @author Tauasa Timoteo
  * 

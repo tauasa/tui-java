@@ -24,11 +24,10 @@ package org.tauasa.commons.gis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tauasa.commons.util.Utils;
 
 /**
- * TODO - document GeohashUtils
+ * Geohash utility methods
  *
  * @author Tauasa Timoteo
  * 
@@ -40,6 +39,7 @@ public final class GeohashUtils extends Utils {
 	private static final Geohash GEOHASH = new Geohash();
 
 	private GeohashUtils(){
+		//private constructor to imlpement singleton
 	}
 
 	public static Geohash getGeohash(){

@@ -46,7 +46,9 @@ public interface IOrdinal{
 	public static class OrdinalComparator implements Comparator<IOrdinal>{
 		@Override
 		public int compare(IOrdinal o1, IOrdinal o2) {
-			if(o1!=null && o2==null){
+			if(o1==null && o2==null){
+				return 0;
+			}else if(o1!=null && o2==null){
 				return 1;
 			}else if(o1==null && o2!=null){
 				return -1;

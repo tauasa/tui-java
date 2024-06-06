@@ -37,7 +37,6 @@ import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tauasa.commons.util.Utils;
 
 /** 
@@ -51,12 +50,14 @@ public abstract class AbstractMailService implements IMailService {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractMailService.class);
 
-	private static ThreadLocal<Session> sessionLocal = new ThreadLocal<Session>();
+	private static final ThreadLocal<Session> sessionLocal = new ThreadLocal<>();
 
 	public AbstractMailService() {
 
 	}
 
+	
+    @Override
 	public void close(){
 		if(logger.isDebugEnabled()){
 			logger.debug("Releasing ThreadLocal resources");
@@ -117,6 +118,7 @@ public abstract class AbstractMailService implements IMailService {
 		
 	}
 
+	@Override
 	public void sendMail(EmailMessage email) throws MessagingException {
 		if(logger.isDebugEnabled()){
 			logger.debug(String.format("Sending email from %s [Subject: %s] ", email.getFrom(), email.getSubject()));
@@ -131,6 +133,7 @@ public abstract class AbstractMailService implements IMailService {
 		Transport.send(msg);
 	}
 	
+	@Override
 	public void sendMail(List<String> recipients, EmailMessage template)throws MessagingException{
 		if(Utils.isEmpty(recipients)){
 			throw new IllegalArgumentException("No recipients specified");
@@ -153,6 +156,7 @@ public abstract class AbstractMailService implements IMailService {
 		return arr;
 	}
 
+	@Override
 	public void sendMail(EmailMessage[] emails) throws MessagingException {
 		if(emails==null){
 			return;
@@ -160,6 +164,7 @@ public abstract class AbstractMailService implements IMailService {
 		sendMail(Arrays.asList(emails));
 	}
 
+	@Override
 	public void sendMail(List<EmailMessage> emails) throws MessagingException {
 		if(emails==null){
 			return;

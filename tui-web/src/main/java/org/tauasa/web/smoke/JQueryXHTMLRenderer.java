@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -37,7 +36,6 @@ import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tauasa.commons.util.DateUtils;
 import org.tauasa.commons.util.PatternUtils;
 import org.tauasa.commons.util.Utils;
@@ -80,6 +78,7 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 
 	}
 
+	@Override
 	public void init(XProperties smoketestProperties){
 		logger.info("Initializing");
 		//mProperties=new XProperties(smoketestProperties);
@@ -115,6 +114,7 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 		return "true".equalsIgnoreCase(mProperties.getProperty(getClass().getSimpleName()+"."+property));
 	}
 
+	@Override
 	public void render(List<SmoketestResult> results, List<SmoketestException> errors, ServletHelper helper)throws IOException {
 		logger.info("Rendering HTML");
 
@@ -178,11 +178,7 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 
 		if(!Utils.isEmpty(results)){
 			//sort the results by the starting time stamp
-			Collections.sort(results, new Comparator<SmoketestResult>(){
-				public int compare(SmoketestResult o1, SmoketestResult o2){
-					return o1.getTestStartTime().compareTo(o2.getTestStartTime());
-				}
-			});
+			Collections.sort(results, (SmoketestResult o1, SmoketestResult o2) -> o1.getTestStartTime().compareTo(o2.getTestStartTime()));
 
 			//enumerate the tests that were run and provide links to the result
 			int tabCount = 2;
@@ -295,7 +291,7 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 			//add the appropriate servlet context attributes to a hashtable
 			ServletContext context = helper.getServletContext();
 			Enumeration<String> names = context.getAttributeNames();
-			Hashtable<String, String> hash = new Hashtable<String, String>();
+			Hashtable<String, String> hash = new Hashtable<>();
 			while (names.hasMoreElements()) {
 				String name = names.nextElement();
 				String value = context.getAttribute(name)==null?"":context.getAttribute(name).toString();
@@ -414,12 +410,7 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 				println("\t</tr>");
 
 				//sort messages by timestamp
-				Collections.sort(result, new Comparator<SmoketestMessage>(){
-                                        @Override
-					public int compare(SmoketestMessage o1, SmoketestMessage o2){
-						return o1.getTimestamp().compareTo(o2.getTimestamp());
-					}
-				});
+				Collections.sort(result, (SmoketestMessage o1, SmoketestMessage o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
 
 				for (SmoketestMessage msg : result) {
 					//write messages in a table

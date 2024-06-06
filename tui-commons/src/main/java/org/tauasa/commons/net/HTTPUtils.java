@@ -123,13 +123,13 @@ public class HTTPUtils {
 		PostMethod method = new PostMethod(strUrl);
 
 		if(!Utils.isEmpty(parameters)){
-			for (String key : parameters.keySet()) {
+			parameters.keySet().forEach(key -> {
 				String val = parameters.get(key)==null ? "" : parameters.get(key).toString();
 				if(logger.isDebugEnabled()){
 					logger.debug(String.format("Parameter: %s=%s", key, val));
 				}
 				method.addParameter(key, val);
-			}
+			});
 		}
 
 		try{

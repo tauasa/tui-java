@@ -22,11 +22,12 @@
  */
 package org.tauasa.web.smoke;
 
+import java.util.Date;
+
+import org.tauasa.commons.data.DataModelException;
 import org.tauasa.commons.data.IDataModel;
 import org.tauasa.commons.util.DateUtils;
 import org.tauasa.commons.util.Utils;
-
-import java.util.Date;
 
 
 /**
@@ -241,8 +242,8 @@ public final class SmoketestMessage {
 				}
 
 				b.append("<tr bgcolor=\"#EEEEEE\">\r\n");
-				for(int i=0;i<columns.length;i++){
-					b.append("<th>").append(columns[i]).append("</th>");
+				for (String column : columns) {
+					b.append("<th>").append(column).append("</th>");
 				}
 				b.append("\r\n</tr>\r\n");
 
@@ -260,7 +261,7 @@ public final class SmoketestMessage {
 				b.append("</table>");
 
 				return b.toString();
-			}catch(Exception e){
+			}catch(DataModelException e){
 				return Utils.getStackTrace(e);
 			}
 		}
@@ -271,6 +272,7 @@ public final class SmoketestMessage {
 	 * &lt;pre&gt;...&lt;/pre&gt;
 	 * */
 	public static class PreFormattedTextFormatter implements Formatter{
+		@Override
 		public String format(SmoketestMessage msg){
 			if(msg.getValue()==null){
 				return "";
@@ -300,6 +302,7 @@ public final class SmoketestMessage {
 	 * (i.e. &lt;a href="<i>value</i>"&gt;<i>value</i>&lt;/a&gt;)
 	 * */
 	public static class DefaultFormatter implements Formatter{
+		@Override
 		public String format(SmoketestMessage msg){
 			if(msg.getValue()==null){
 				return "";
@@ -324,6 +327,7 @@ public final class SmoketestMessage {
 			this.tableTitle=tableTitle;
 		}
 
+        @Override
 		public String format(SmoketestMessage msg){
 			if(msg.getValue()==null){
 				return "";
@@ -363,6 +367,7 @@ public final class SmoketestMessage {
 	 * &lt; and &gt; characters so it is readable in a browser
 	 * */
 	public static class PreformattedXmlFormatter implements Formatter{
+		@Override
 		public String format(SmoketestMessage msg){
 			if(msg.getValue()==null){
 				return "";
@@ -377,6 +382,7 @@ public final class SmoketestMessage {
 	}
 
 	public static class ToStringFormatter implements Formatter{
+		@Override
 		public String format(SmoketestMessage msg){
 			return new StringBuilder()
 			.append("[").append(msg.getType().name()).append("] ")

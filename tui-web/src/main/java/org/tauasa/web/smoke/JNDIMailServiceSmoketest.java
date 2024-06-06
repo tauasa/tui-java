@@ -22,17 +22,16 @@
  */
 package org.tauasa.web.smoke;
 
+import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tauasa.commons.net.Localhost;
 import org.tauasa.commons.util.PatternUtils;
 import org.tauasa.commons.util.Utils;
 import org.tauasa.mail.EmailMessage;
 import org.tauasa.mail.JNDIMailService;
 import org.tauasa.web.ServletHelper;
-
-import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** 
  * Sends a test email using the {@link JNDIMailService}
@@ -102,7 +101,8 @@ public class JNDIMailServiceSmoketest extends AbstractJNDISmoketest {
 			}catch(Exception e){
 				addErrorMessage(jndiName, new Exception("Test message failed for "+jndiName+": "+e.getMessage()));
 			}finally{
-				service.close();
+				if(service!=null)
+					service.close();
 			}
 		}
 
@@ -134,9 +134,8 @@ public class JNDIMailServiceSmoketest extends AbstractJNDISmoketest {
 		if(Utils.isEmpty(subject)){
 			subject = getClass().getSimpleName();
 		}
-		subject += " ["+Localhost.getHostName() + "/" + Localhost.getHostAddress()+"]";
+		subject += String.format("[%s/%s]", Localhost.getHostName(), Localhost.getHostAddress());
 		getLogger().info("Subject: "+subject);
-
 
 	}
 
@@ -146,12 +145,7 @@ public class JNDIMailServiceSmoketest extends AbstractJNDISmoketest {
 			return description;
 		}
 		//jndiNames
-		StringBuilder b = new StringBuilder()
-		.append("Performs a JNDI lookup on the ")
-		.append(Utils.join(jndiNames, ", "))
-		.append(" JavaMail Session").append(jndiNames.length > 1 ? "s" : "")
-		.append(" and sends a test email");
-		return b.toString();
+		return "Performs a JNDI lookup on the " + Utils.join(jndiNames, ", ") + " JavaMail Session" + (jndiNames.length > 1 ? "s" : "") + " and sends a test email";
 	}
 
 	@Override
