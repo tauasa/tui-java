@@ -37,7 +37,7 @@ import org.tauasa.commons.util.Utils;
 /**
  * Static helper methods for performing I/O operations
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=org.tauasa.commons.io.IOUtils">tauasa@gmail.com</a>
+ * @author <a href="mailto:tauasa@gmail dot com?subject=org.tauasa.commons.io.IOUtils">tauasa@gmail dot com</a>
  */
 public class IOUtils extends Utils{
 
@@ -89,7 +89,7 @@ public class IOUtils extends Utils{
 		}
 		try{
 			c.close();
-		}catch(Throwable e){
+		}catch(IOException e){
 			if(logger.isDebugEnabled()){
 				logger.debug("[SWALLOWED] Could not close "+c.getClass().getName(), e);
 			}
@@ -105,7 +105,7 @@ public class IOUtils extends Utils{
 		}
 		try{
 			c.close();
-		}catch(Throwable e){
+		}catch(Exception e){
 			if(logger.isDebugEnabled()){
 				logger.debug("[SWALLOWED] Could not close "+c.getClass().getName(), e);
 			}

@@ -37,7 +37,7 @@ import java.util.Date;
  * @author Tauasa Timoteo
  * 
  */
-public class ResultSetDataModel implements IDataModel {
+public final class ResultSetDataModel implements IDataModel {
 
 	private static final long serialVersionUID = 1L;
 	protected ResultSet resultSet;
@@ -52,6 +52,7 @@ public class ResultSetDataModel implements IDataModel {
 	/**
 	 * Returns the column names from the ResultSetMetaData
 	 * */
+        @Override
 	public String[] getColumnNames()throws DataModelException{
 
 		try{
@@ -71,6 +72,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public int getColumnCount()throws DataModelException{
 		try{
 			return getMetaData().getColumnCount();
@@ -90,6 +92,7 @@ public class ResultSetDataModel implements IDataModel {
 		return metaData;
 	}
 
+        @Override
 	public boolean moveTo(int rowNum)throws DataModelException{
 		try{
 			if(rowNum < 0){
@@ -102,12 +105,14 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public boolean reset()throws DataModelException{
 		metaData = null;
 		size = -1;
 		return moveTo(-1);
 	}
 
+        @Override
 	public boolean next() throws DataModelException {
 		try{
 			return resultSet.next();
@@ -116,6 +121,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public boolean previous() throws DataModelException {
 		try{
 			return resultSet.previous();
@@ -124,6 +130,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public boolean last() throws DataModelException {
 		try{
 			return resultSet.last();
@@ -132,6 +139,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public boolean first() throws DataModelException {
 		try{
 			return resultSet.first();
@@ -140,6 +148,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public int size() throws DataModelException {
 		if(size!=-1){
 			return size;
@@ -166,6 +175,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public String getString(String name) throws DataModelException {
 		try{
 			return resultSet.getString(name);
@@ -174,6 +184,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public String getString(int column) throws DataModelException {
 		try{
 			return resultSet.getString(column+1);
@@ -182,6 +193,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public int getInt(String name) throws DataModelException {
 		try{
 			return resultSet.getInt(name);
@@ -190,6 +202,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public int getInt(int column) throws DataModelException {
 		try{
 			return resultSet.getInt(column+1);
@@ -198,6 +211,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public long getLong(String name) throws DataModelException {
 		try{
 			return resultSet.getLong(name);
@@ -206,6 +220,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public long getLong(int column) throws DataModelException {
 		try{
 			return resultSet.getLong(column+1);
@@ -214,6 +229,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public float getFloat(String name)throws DataModelException{
 		try{
 			return resultSet.getFloat(name);
@@ -222,6 +238,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public float getFloat(int column)throws DataModelException{
 		try{
 			return resultSet.getFloat(column+1);
@@ -230,6 +247,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public double getDouble(String name)throws DataModelException{
 		try{
 			return resultSet.getDouble(name);
@@ -238,6 +256,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public double getDouble(int column)throws DataModelException{
 		try{
 			return resultSet.getDouble(column+1);
@@ -246,6 +265,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public Date getDate(String name) throws DataModelException {
 		try{
 			return resultSet.getDate(name);
@@ -254,6 +274,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public Date getDate(int column) throws DataModelException {
 		try{
 			return resultSet.getDate(column+1);
@@ -262,6 +283,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public Object getObject(String name) throws DataModelException {
 		try{
 			return resultSet.getObject(name);
@@ -270,6 +292,7 @@ public class ResultSetDataModel implements IDataModel {
 		}
 	}
 
+        @Override
 	public Object getObject(int column) throws DataModelException {
 		try{
 			return resultSet.getObject(column+1);

@@ -40,7 +40,7 @@ import org.tauasa.commons.util.Utils;
  * @author Tauasa Timoteo
  * 
  */
-public class TableDataModel extends AbstractTableModel implements IDataModel {
+public final class TableDataModel extends AbstractTableModel implements IDataModel {
 
 	private static final long serialVersionUID = 1L;
 	protected String[] columns;
@@ -145,14 +145,17 @@ public class TableDataModel extends AbstractTableModel implements IDataModel {
 	/////////////////////////////////////
 	// Begin TableModel method impls & overrides
 	/////////////////////////////////////
+        @Override
 	public Object getValueAt(int row, int col) {
 		return rows[row][col];
 	}
 
+        @Override
 	public int getColumnCount() {
 		return columns==null ? 0 : columns.length;
 	}
 
+        @Override
 	public int getRowCount() {
 		return rows==null ? 0 : rows.length;
 	}
@@ -172,20 +175,24 @@ public class TableDataModel extends AbstractTableModel implements IDataModel {
 	// End TableModel method impls & overrides
 	/////////////////////////////////////
 
+        @Override
 	public String[] getColumnNames() throws DataModelException {
 		return columns;
 	}
 
+        @Override
 	public boolean moveTo(int rowNum) throws DataModelException {
 		currentRow = rowNum;
 		return true;
 	}
 
+        @Override
 	public boolean reset() throws DataModelException {
 		currentRow = 0;
 		return true;
 	}
 
+        @Override
 	public boolean next() throws DataModelException {
 		if(currentRow+1 > rows.length-1){
 			return false;
@@ -194,6 +201,7 @@ public class TableDataModel extends AbstractTableModel implements IDataModel {
 		return true;
 	}
 
+        @Override
 	public boolean previous() throws DataModelException {
 		if(currentRow==0){
 			return false;
@@ -202,15 +210,18 @@ public class TableDataModel extends AbstractTableModel implements IDataModel {
 		return true;
 	}
 
+        @Override
 	public boolean last() throws DataModelException {
 		currentRow = rows.length-1;
 		return true;
 	}
 
+        @Override
 	public boolean first() throws DataModelException {
 		return reset();
 	}
 
+        @Override
 	public int size() throws DataModelException {
 		return getRowCount();
 	}
@@ -224,10 +235,12 @@ public class TableDataModel extends AbstractTableModel implements IDataModel {
 		throw new DataModelException("Column not found: "+columnName);
 	}
 
+        @Override
 	public String getString(String name) throws DataModelException {
 		return getString(getColumnIndex(name));
 	}
 
+        @Override
 	public String getString(int column) throws DataModelException {
 		Object value = getValueAt(currentRow, column);
 		return value==null ? null : value.toString();
@@ -241,50 +254,62 @@ public class TableDataModel extends AbstractTableModel implements IDataModel {
 		return (Number)getValueAt(currentRow, column);
 	}
 
+        @Override
 	public int getInt(String name) throws DataModelException {
 		return getInt(getColumnIndex(name));
 	}
 
+        @Override
 	public int getInt(int column) throws DataModelException {
 		return getNumber(column).intValue();
 	}
 
+        @Override
 	public long getLong(String name) throws DataModelException {
 		return getLong(getColumnIndex(name));
 	}
 
+        @Override
 	public long getLong(int column) throws DataModelException {
 		return getNumber(column).longValue();
 	}
 
+        @Override
 	public float getFloat(String name)throws DataModelException{
 		return getFloat(getColumnIndex(name));
 	}
 
+        @Override
 	public float getFloat(int column)throws DataModelException{
 		return getNumber(column).floatValue();
 	}
 
+        @Override
 	public double getDouble(String name)throws DataModelException{
 		return getDouble(getColumnIndex(name));
 	}
 
+        @Override
 	public double getDouble(int column)throws DataModelException{
 		return getNumber(column).doubleValue();
 	}
 
+        @Override
 	public Date getDate(String name) throws DataModelException {
 		return getDate(getColumnIndex(name));
 	}
 
+        @Override
 	public Date getDate(int column) throws DataModelException {
 		return (Date)getValueAt(currentRow, column);
 	}
 
+        @Override
 	public Object getObject(String name) throws DataModelException {
 		return getObject(getColumnIndex(name));
 	}
 
+        @Override
 	public Object getObject(int column) throws DataModelException {
 		return getValueAt(currentRow, column);
 	}

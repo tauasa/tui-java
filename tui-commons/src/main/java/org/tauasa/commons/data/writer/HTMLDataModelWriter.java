@@ -37,8 +37,6 @@ import java.io.OutputStream;
  */
 public class HTMLDataModelWriter extends AbstractDataModelWriter {
 
-	static final byte[] NEWLINE = "\r\n".getBytes();
-
 	protected String title, header, subHeader;
 
 	public HTMLDataModelWriter(OutputStream out) {
@@ -59,7 +57,7 @@ public class HTMLDataModelWriter extends AbstractDataModelWriter {
 	}
 
 	static String createStyleSheet(){
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("<style>\r\n");
 
@@ -82,6 +80,7 @@ public class HTMLDataModelWriter extends AbstractDataModelWriter {
 		return buffer.toString();
 	}
 
+        @Override
 	public void write(IDataModel data) throws DataModelException, IOException {
 		writeln("<html>");
 		writeln("<head>");
@@ -118,9 +117,9 @@ public class HTMLDataModelWriter extends AbstractDataModelWriter {
 		//write column headers
 		writeln("<tr class=\"header\">");
 		String[] columns = data.getColumnNames();
-		for(int i=0;i<columns.length;i++){
+		for (String column : columns) {
 			write("<th class=\"default\">");
-			write(columns[i]);
+			write(column);
 			writeln("</th>");
 		}
 		writeln("</tr>");

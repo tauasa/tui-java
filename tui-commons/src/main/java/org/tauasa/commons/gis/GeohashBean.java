@@ -36,8 +36,8 @@ public class GeohashBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String geohash;
-	private double[] latlon;
+	private final String geohash;
+	private final double[] latlon;
 
 	public GeohashBean(final String geohash) {
 		this.geohash=geohash;

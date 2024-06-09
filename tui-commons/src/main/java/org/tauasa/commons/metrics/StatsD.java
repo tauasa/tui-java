@@ -29,7 +29,7 @@ import com.timgroup.statsd.StatsDClient;
 /**
  * Statsd {@link Metrics} implementation backed by the {@link StatsDClient}
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=org.tauasa.commons.metrics.StatsD">tauasa@gmail.com</a>
+ * @author <a href="mailto:tauasa@gmail dot com?subject=org.tauasa.commons.metrics.StatsD">tauasa@gmail dot com</a>
  */
 public class StatsD implements Metrics{
 	

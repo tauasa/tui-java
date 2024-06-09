@@ -35,7 +35,7 @@ public abstract class AbstractDataModelWriter implements IDataModelWriter {
 	protected OutputStream out;
 
 	public AbstractDataModelWriter(OutputStream out) {
-		setOutputStream(out);
+		this.out=out;
 	}
 
 	public OutputStream getOutputStream() {

@@ -37,7 +37,7 @@ import org.tauasa.commons.io.IOUtils;
 /**
  * <a href="http://www.jdbi.org/">JDBI</a> utility methods
  *
- * @author <ahref="mailto:tauasa@gmail.com?subject=org.tauasa.commons.jdbi.JDBIUtils">tauasa@gmail.com</a>
+ * @author <ahref="mailto:tauasa@gmail dot com?subject=org.tauasa.commons.jdbi.JDBIUtils">tauasa@gmail dot com</a>
  * 
  */
 public class JDBIUtils extends IOUtils{

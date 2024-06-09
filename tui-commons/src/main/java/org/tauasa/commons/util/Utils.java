@@ -38,7 +38,7 @@ import com.google.common.base.Throwables;
 /**
  * Static utility methods
  *
- * @author tauasa@gmail.com
+ * @author tauasa@gmail dot com
  * 
  */
 public class Utils {

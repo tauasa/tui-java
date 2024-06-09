@@ -154,9 +154,9 @@ public class XFile extends File {
 		if(data==null){
 			throw new NullPointerException("Specified data is null");
 		}
-		FileOutputStream out = getOutputStream(append);
-		out.write(data);
-		out.close();
+		try (FileOutputStream out = getOutputStream(append)) {
+			out.write(data);
+		}
 	}//*/
 
 	/**
@@ -258,9 +258,9 @@ public class XFile extends File {
 			return null;
 		}
 
-		ArrayList<XFile> files = new ArrayList<XFile>();
+		ArrayList<XFile> files = new ArrayList<>();
 
-		File[] list = null;
+		File[] list;
 
 		if(filter!=null){
 			list = listFiles(filter);
@@ -272,8 +272,8 @@ public class XFile extends File {
 			return files;
 		}
 
-		for(int i=0;i<list.length;i++){
-			XFile f = new XFile(list[i]);
+		for (File list1 : list) {
+			XFile f = new XFile(list1);
 			if(recurse && f.isDirectory()){
 				files.addAll(f.getFiles(filter, recurse));
 			}else{
@@ -323,6 +323,7 @@ public class XFile extends File {
 	 * {@link Comparator} implementation for comparing {@link File}s by name
 	 * */
 	public static class FilenameComparator implements Comparator<File>{
+                @Override
 		public int compare(File f1, File f2) {
 			return f1.getName().compareToIgnoreCase(f2.getName());
 		}

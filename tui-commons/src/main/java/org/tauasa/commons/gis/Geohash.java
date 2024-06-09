@@ -33,14 +33,14 @@ import java.util.HashMap;
  */
 public class Geohash {
 
-	private static int NUMBITS = 6 * 5;
+	private static final int NUMBITS = 6 * 5;
 	final static char[] DIGITS = { 
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
 		'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 
 		'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' 
 	};
 
-	final static HashMap<Character, Integer> LOOKUP = new HashMap<Character, Integer>();
+	final static HashMap<Character, Integer> LOOKUP = new HashMap<>();
 	static {
 		int i = 0;
 		for (char c : DIGITS)

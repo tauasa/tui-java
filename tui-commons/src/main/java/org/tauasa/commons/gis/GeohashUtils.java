@@ -38,10 +38,6 @@ public final class GeohashUtils extends Utils {
 
 	private static final Geohash GEOHASH = new Geohash();
 
-	private GeohashUtils(){
-		//private constructor to imlpement singleton
-	}
-
 	public static Geohash getGeohash(){
 		return GEOHASH;
 	}

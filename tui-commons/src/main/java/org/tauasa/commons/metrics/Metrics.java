@@ -28,7 +28,7 @@ package org.tauasa.commons.metrics;
  * Contract for tracking application-level metrics. Implementations are typically 
  * backed by a 3rd-party client library.
  *
- * @author <a href="mailto:tauasa@gmail.com?subject=org.tauasa.commons.metrics.Metrics">tauasa@gmail.com</a>
+ * @author <a href="mailto:tauasa@gmail dot com?subject=org.tauasa.commons.metrics.Metrics">tauasa@gmail dot com</a>
  */
 public interface Metrics{
 	

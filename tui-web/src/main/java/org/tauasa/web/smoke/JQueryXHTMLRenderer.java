@@ -28,8 +28,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
@@ -291,7 +292,7 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 			//add the appropriate servlet context attributes to a hashtable
 			ServletContext context = helper.getServletContext();
 			Enumeration<String> names = context.getAttributeNames();
-			Hashtable<String, String> hash = new Hashtable<>();
+			Map<String, String> hash = new HashMap<>();
 			while (names.hasMoreElements()) {
 				String name = names.nextElement();
 				String value = context.getAttribute(name)==null?"":context.getAttribute(name).toString();
@@ -452,7 +453,7 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void printProperties(@SuppressWarnings("rawtypes") Hashtable props, String tableTitle, String filter, boolean standaloneTable)throws IOException{
+	private void printProperties(@SuppressWarnings("rawtypes") Map props, String tableTitle, String filter, boolean standaloneTable)throws IOException{
 		if(standaloneTable){
 			println("\t<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">");
 		}

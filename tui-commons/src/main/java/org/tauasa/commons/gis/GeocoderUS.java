@@ -46,18 +46,16 @@ public class GeocoderUS extends AbstractGeocoder {
 	}
 
 	public GeocoderUS(String userName, String password) {
-		setUserName(userName);
-		setPassword(password);
+		this.userName=userName;
+		this.password=password;
 	}
 
 	@Override
 	public double[] geocode(String streetAddress, String city, String state){
 
-		StringBuilder b = new StringBuilder(url)
-		.append("?address=")
-		.append(encode(streetAddress, city, state));
+		String b = url + "?address=" + encode(streetAddress, city, state);
 
-		String _url = b.toString();
+		String _url = b;
 
 		HTTPUtils.HttpResponse res = null;
 
