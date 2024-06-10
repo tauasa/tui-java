@@ -1,24 +1,25 @@
 /*
  * Copyright 2012 Tauasa Timoteo
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
- * software and associated documentation files (the “Software”), to deal in 
- * the Software without restriction, including without limitation the rights to use, 
- * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of 
- * the Software, and to permit persons to whom the Software is furnished to do so, 
+ * Permission is hereby granted, free of charge, to any person 
+ * obtaining a copy of this software and associated documentation 
+ * files (the “Software”), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so, 
  * subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, 
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE 
- * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
- * OTHER DEALINGS IN THE SOFTWARE.
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-
+ * INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN 
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
  */
 package org.tauasa.mail;
 
@@ -26,7 +27,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -80,9 +80,9 @@ public class EmailMessage implements Serializable {
 	}
 
 	protected EmailMessage(String from, String subject, String message) {
-		setFrom(from);
-		setSubject(subject);
-		setMessage(message);
+		this.from=from;
+		this.subject=subject;
+		this.message=message;
 	}
 
 	public EmailMessage(String to, String from, String subject, String message)throws AddressException{
@@ -101,7 +101,7 @@ public class EmailMessage implements Serializable {
 
 	public void addHeader(String name, String value){
 		if(headers==null){
-			headers = new HashMap<String, String>();
+			headers = new HashMap<>();
 		}
 		headers.put(name, value);
 	}
@@ -116,7 +116,7 @@ public class EmailMessage implements Serializable {
 
 	public void addAttachment(EmailAttachment attachment){
 		if(attachments==null){
-			attachments = new ArrayList<EmailAttachment>();
+			attachments = new ArrayList<>();
 		}
 		attachments.add(attachment);
 	}
@@ -133,9 +133,7 @@ public class EmailMessage implements Serializable {
 		msg.setFrom(new InternetAddress(from));
 
 		if(headers!=null){
-			Iterator<String> keys = headers.keySet().iterator();
-			while (keys.hasNext()) {
-				String key = keys.next();
+			for (String key : headers.keySet()) {
 				String value = headers.get(key);
 				msg.setHeader(key, value);
 			}
@@ -166,7 +164,7 @@ public class EmailMessage implements Serializable {
 
 	public void addRecipient(Recipient rcpt){
 		if(recipients==null){
-			recipients = new ArrayList<Recipient>();
+			recipients = new ArrayList<>();
 		}
 		recipients.add(rcpt);
 	}
@@ -179,8 +177,8 @@ public class EmailMessage implements Serializable {
 		if(addresses==null){
 			return;
 		}
-		for(int i=0;i<addresses.length;i++){
-			addTo(addresses[i]);
+		for (String addresse : addresses) {
+			addTo(addresse);
 		}
 	}
 
@@ -192,8 +190,8 @@ public class EmailMessage implements Serializable {
 		if(addresses==null){
 			return;
 		}
-		for(int i=0;i<addresses.length;i++){
-			addCC(addresses[i]);
+		for (String addresse : addresses) {
+			addCC(addresse);
 		}
 	}
 

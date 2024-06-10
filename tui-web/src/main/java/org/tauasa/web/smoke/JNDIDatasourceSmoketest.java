@@ -1,24 +1,25 @@
 /*
  * Copyright 2012 Tauasa Timoteo
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
- * software and associated documentation files (the “Software”), to deal in 
- * the Software without restriction, including without limitation the rights to use, 
- * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of 
- * the Software, and to permit persons to whom the Software is furnished to do so, 
+ * Permission is hereby granted, free of charge, to any person 
+ * obtaining a copy of this software and associated documentation 
+ * files (the “Software”), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so, 
  * subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, 
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE 
- * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
- * OTHER DEALINGS IN THE SOFTWARE.
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-
+ * INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN 
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
  */
 package org.tauasa.web.smoke;
 
@@ -34,7 +35,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import org.tauasa.commons.data.DataModelException;
 /**
  * Performs a lookup on one or more JNDI {@link DataSource}s and, optionally, executes a SQL
  * query against it
@@ -103,7 +107,7 @@ public class JNDIDatasourceSmoketest extends AbstractJNDISmoketest {
 				try{
 					addInfoMessage("Looking up "+jndiName);
 					super.lookup(jndiName);
-				}catch(Exception e){
+				}catch(NamingException e){
 					addErrorMessage(e);
 					continue;
 				}
@@ -123,11 +127,11 @@ public class JNDIDatasourceSmoketest extends AbstractJNDISmoketest {
 		}
 
 		for (int i=0;i<jndiNames.length;i++) {
-			DataSource ds = null;
+			DataSource ds;
 			try{
 				addInfoMessage("Looking up "+jndiNames[i]);
 				ds = (DataSource)super.lookup(jndiNames[i]);
-			}catch(Exception e){
+			}catch(NamingException e){
 				addErrorMessage(jndiNames[i], e);
 				continue;
 			}
@@ -188,7 +192,7 @@ public class JNDIDatasourceSmoketest extends AbstractJNDISmoketest {
 		//create a TableDataModel from the result set
 		try{
 			result.add(new SmoketestMessage(new TableDataModel(rs), new SmoketestMessage.DataModelFormatter("SQL: "+sql)));
-		}catch(Exception e){
+		}catch(SQLException | DataModelException e){
 			addWarningMessage("DataModelFormatter failed for "+jndiName+" ("+sql+")");
 			result.add(new SmoketestMessage(sql));
 			rs.beforeFirst();

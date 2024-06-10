@@ -8,8 +8,8 @@
 	<version>1.0.0</version>
 	<name>Tui Java Stuffs</name>
 	<description>
-	Tui Java Stuffs is a collection of custom java libraries that can be used to build bloated JEE applications. 
-	Each library is a collection helper classes and/or third-party integrations
+	Tui Java Stuffs is a small collection of java libs that can be used to quickly spin up an app or use
+	it within in a bloated JEE application. 
 	</description>
 	<url>http://www.tauasa.org/</url>
 	<inceptionYear>2007</inceptionYear>

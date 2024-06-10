@@ -1,24 +1,25 @@
 /*
  * Copyright 2012 Tauasa Timoteo
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
- * software and associated documentation files (the “Software”), to deal in 
- * the Software without restriction, including without limitation the rights to use, 
- * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of 
- * the Software, and to permit persons to whom the Software is furnished to do so, 
+ * Permission is hereby granted, free of charge, to any person 
+ * obtaining a copy of this software and associated documentation 
+ * files (the “Software”), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so, 
  * subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, 
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE 
- * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
- * OTHER DEALINGS IN THE SOFTWARE.
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-
+ * INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN 
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
  */
 package org.tauasa.web.smoke;
 
@@ -26,11 +27,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -76,6 +77,7 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 
 	}
 
+        @Override
 	public void init(XProperties smoketestProperties){
 		logger.info("Initializing");
 		this.mProperties=smoketestProperties;
@@ -85,6 +87,7 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 		return "true".equalsIgnoreCase(mProperties.getProperty(getClass().getSimpleName()+"."+property));
 	}
 
+        @Override
 	public void render(List<SmoketestResult> results, List<SmoketestException> errors, ServletHelper helper)throws IOException {
 		logger.info("Rendering HTML");
 
@@ -111,11 +114,7 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 
 		if(!Utils.isEmpty(results)){
 			//sort the results by the starting time stamp
-			Collections.sort(results, new Comparator<SmoketestResult>(){
-				public int compare(SmoketestResult o1, SmoketestResult o2){
-					return o1.getTestStartTime().compareTo(o2.getTestStartTime());
-				}
-			});
+			Collections.sort(results, (SmoketestResult o1, SmoketestResult o2) -> o1.getTestStartTime().compareTo(o2.getTestStartTime()));
 
 			//println("<strong>Tests:</strong>");
 
@@ -225,11 +224,7 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 					println("\t</tr>");
 
 					//sort messages by timestamp
-					Collections.sort(result, new Comparator<SmoketestMessage>(){
-						public int compare(SmoketestMessage o1, SmoketestMessage o2){
-							return o1.getTimestamp().compareTo(o2.getTimestamp());
-						}
-					});
+					Collections.sort(result, (SmoketestMessage o1, SmoketestMessage o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
 
 					for (SmoketestMessage msg : result) {
 						//write messages in a table
@@ -263,7 +258,7 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 			//add the appropriate servlet context attributes to a hashtable
 			ServletContext context = helper.getServletContext();
 			Enumeration<String> names = context.getAttributeNames();
-			Hashtable<String, Object> hash = new Hashtable<String, Object>();
+			Map<String, Object> hash = new HashMap<>();
 			while (names.hasMoreElements()) {
 				String name = names.nextElement();
 				String value = context.getAttribute(name)==null?"":context.getAttribute(name).toString();
@@ -286,12 +281,12 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 
 	}
 
-	private void printProperties(@SuppressWarnings("rawtypes") Hashtable props, String tableTitle, String filter)throws IOException{
+	private void printProperties(@SuppressWarnings("rawtypes") Map props, String tableTitle, String filter)throws IOException{
 		printProperties(props, tableTitle, filter, true);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void printProperties(@SuppressWarnings("rawtypes") Hashtable props, String tableTitle, String filter, boolean standaloneTable)throws IOException{
+	private void printProperties(@SuppressWarnings("rawtypes") Map props, String tableTitle, String filter, boolean standaloneTable)throws IOException{
 		if(standaloneTable){
 			println("\t<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">");
 		}
@@ -308,11 +303,11 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 			p = Pattern.compile(filter);
 		}
 
-		ArrayList<String> keys = new ArrayList<String>(props.keySet());
+		ArrayList<String> keys = new ArrayList<>(props.keySet());
 		Collections.sort(keys, String.CASE_INSENSITIVE_ORDER);
 
 		for(int i=0;i<keys.size();i++){
-			String key = keys.get(i).toString();
+			String key = keys.get(i);
 			if(p==null || p.matcher(key).matches()){
 				//show the property is there is no filter or a filter match
 				println("\t<tr>");

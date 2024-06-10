@@ -1,24 +1,25 @@
 /*
  * Copyright 2012 Tauasa Timoteo
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
- * software and associated documentation files (the “Software”), to deal in 
- * the Software without restriction, including without limitation the rights to use, 
- * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of 
- * the Software, and to permit persons to whom the Software is furnished to do so, 
+ * Permission is hereby granted, free of charge, to any person 
+ * obtaining a copy of this software and associated documentation 
+ * files (the “Software”), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so, 
  * subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, 
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE 
- * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
- * OTHER DEALINGS IN THE SOFTWARE.
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-
+ * INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN 
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
  */
 package org.tauasa.web.smoke;
 
@@ -73,10 +74,12 @@ public abstract class AbstractSmoketest implements ISmoketest {
 	 * method is not overridden progrmatically then the system property <code>smoketest.poc</code> is used.
 	 * If that system property is not defined then the string literal {@value #UNKNOWN_POC} is returned
 	 * */
+        @Override
 	public String getPointOfContact(){
 		return pointOfContact!=null ? pointOfContact : System.getProperty("smoketest.poc", UNKNOWN_POC);
 	}
 
+        @Override
 	public String getDescription(){
 		return description;
 	}
@@ -84,16 +87,19 @@ public abstract class AbstractSmoketest implements ISmoketest {
 	/**
 	 * Returns the logger for the implementing test
 	 * */
+        @Override
 	public Logger getLogger(){
 		return LoggerFactory.getLogger(getClass());
 	}
 
+        @Override
 	public void cleanUp() {
 		if(getLogger().isInfoEnabled()){
 			getLogger().info("Cleaning up");
 		}
 	}
 
+        @Override
 	public SmoketestResult getResult() {
 		return result;
 	}
@@ -101,6 +107,7 @@ public abstract class AbstractSmoketest implements ISmoketest {
 	/**
 	 * Returns true if the current date/time is falls between starts/expires
 	 * */
+        @Override
 	public boolean isActive(){
 		Date now = new Date();
 		boolean goodStart = true;
@@ -133,6 +140,7 @@ public abstract class AbstractSmoketest implements ISmoketest {
 	/**
 	 * Adds the smoketest-specific config values to this instance's results member
 	 * */
+        @Override
 	public void init(Properties smoketestProperties) throws SmoketestConfigException {
 		getLogger().info("Initializing");
 
@@ -153,7 +161,7 @@ public abstract class AbstractSmoketest implements ISmoketest {
 					getProperty(smoketestProperties, STARTS_FORMAT_KEY, DEFAULT_DATE_FORMAT),
 					DateUtils.adjustDate(new Date(), -1));//default to yesterday
 			getLogger().info("Start date: "+starts);
-		}catch(Exception e){
+		}catch(ParseException e){
 			throw new SmoketestConfigException("Could not parse start date", e, result);
 		}
 
@@ -163,7 +171,7 @@ public abstract class AbstractSmoketest implements ISmoketest {
 					getProperty(smoketestProperties, EXPIRES_FORMAT_KEY, DEFAULT_DATE_FORMAT),
 					DateUtils.adjustDate(new Date(), 1));//default to tomorrow
 			getLogger().info("Expires: "+starts);
-		}catch(Exception e){
+		}catch(ParseException e){
 			throw new SmoketestConfigException("Could not parse expiration date", e, result);
 		}
 
@@ -200,11 +208,12 @@ public abstract class AbstractSmoketest implements ISmoketest {
 	 * is re-thrown as a SmoketestException containing any results
 	 * @throws org.tauasa.web.smoke.SmoketestException which wraps the root cause and contains the results
 	 * */
+        @Override
 	public final void execute(ServletHelper helper)throws SmoketestException{
 		getLogger().info("Executing smoketest");
 		try{
 			doExecute(helper);
-		}catch(Throwable t){
+		}catch(Exception t){
 			getLogger().warn("Smoketest failed", t);
 			throw new SmoketestException(getClass().getSimpleName()+" failed", t, result);
 		}finally{
@@ -307,7 +316,7 @@ public abstract class AbstractSmoketest implements ISmoketest {
 
 		Iterator<Object> keys = props.keySet().iterator();
 
-		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<>();
 
 		while(keys.hasNext()){
 			String key = keys.next().toString();
