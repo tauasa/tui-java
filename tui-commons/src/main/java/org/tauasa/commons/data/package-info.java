@@ -1,5 +1,5 @@
 /***
- * DataModel definitions and impls
- * @since 1.0
+ * DataModel stuffs
+ * @since 1.0.0
  */
 package org.tauasa.commons.data;

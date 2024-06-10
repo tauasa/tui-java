@@ -1,6 +1,6 @@
 /**
- * JDBI- and DAO-related resources and utilities
+ * JDBI stuffs
  *
- * @author Tauasa Timoteo
+ * @since 1.0.0
  */
 package org.tauasa.commons.jdbi;

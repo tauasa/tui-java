@@ -254,7 +254,6 @@ public class ThreadLocalDAO {
 			resources.close();
 			//remove the JDBCResources from the ThreadLocal instance
 			localResources.set(null);
-			resources = null;
 		}
 	}
 

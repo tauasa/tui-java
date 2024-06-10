@@ -1,5 +1,5 @@
 /***
- * Network classes and utils
- * @since 1.0
+ * Network stuffs
+ * @since 1.0.0
  */
 package org.tauasa.commons.net;
