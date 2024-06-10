@@ -1,5 +1,5 @@
 /***
- * Generic utility classes
- * @since 1.0
+ * Generic utility stuffs
+ * @since 1.0.0
  */
 package org.tauasa.commons.util;
