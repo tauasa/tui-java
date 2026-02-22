@@ -289,18 +289,26 @@ public class XFile extends File {
 	}
 
 	/**
-	 * Returns a collection of all the files in this directory
-	 * WITHOUT recursing
-	 * */
+	 * Returns a collection of all the files in this directory WITHOUT recursing
+	 * */ 
 	public List<XFile> getFiles(FileFilter filter){
 		return getFiles(filter, false);
 	}
 
 	/**
-	 * Equivalent to getFiles(null)
+	 * Recurses this directory if it is indeed a directory. Equivalent to <code>getFiles(null)</code>
 	 * */
 	public List<XFile> getFiles(){
 		return getFiles(null);
+	}
+
+	public static List<XFile> getFiles(String dir, String prefix, String suffix, boolean recurse){
+		XFile f = new XFile(dir);
+		return f.getFiles(new XFileFilter(prefix, suffix), recurse);
+	}
+
+	public static List<XFile> getFiles(String dir, boolean recurse){
+		return getFiles(dir, null, null, recurse);
 	}
 
 	/**
