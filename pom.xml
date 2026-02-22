@@ -5,7 +5,7 @@
 	<groupId>org.tauasa</groupId>
 	<artifactId>tui-java</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>Tui Java Stuffs</name>
 	<description>
 	Tui Java Stuffs is a small collection of java libs that can be used to quickly spin up an app or use

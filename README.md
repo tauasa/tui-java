@@ -1,9 +1,9 @@
 
 # **tui-java**
 
-Small toolbox of vanilla java stuffs I used for java development from 1998-2014. It evolved as java evolved starting with `JDK1.1` and ending with `Java SE 8`.
+Small toolbox of old java stuffs circa 1998-2012.
 
-Originally compiled/packaged using bash, then Ant, and finally Maven (No pesky unit tests).
+It evolved as java evolved starting with `JDK1.1` and ending with `Java SE 8`. Most (if not all) of the functionality in these classes is available in Spring and/or later JDK releases. This is code archeology.
 
 To build: `mvn clean install`
 
