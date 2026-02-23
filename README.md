@@ -1,10 +1,12 @@
 
 # **tui-java**
 
-Small toolbox of old java stuffs circa 1998-2012.
+Toolbox of old java stuffs developed between 1998-2012.
 
-It evolved as java evolved starting with `JDK1.1` and ending with `Java SE 8`. Most (if not all) of the functionality in these classes is available in Spring and/or later JDK releases. This is code archeology.
+It evolved as java evolved beginning with `JDK1.1` and active development ended with the release of `Java SE 8`. Most of the functionality in this library is available via Spring, Guice, and/or later JDK releases. 
+
+This is essentially code archeology with 0.00 unit tests
+
+I still use this code occasionally for rapid prototyping or quickly building simple web and/or CLI apps
 
 To build: `mvn clean install`
-
-
