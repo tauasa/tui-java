@@ -7,6 +7,12 @@ It evolved as java evolved beginning with `JDK1.1` and active development ended 
 
 This is essentially code archeology with 0.00 unit tests
 
-I still use this code occasionally for rapid prototyping or quickly building simple web and/or CLI apps
+I still use this code occasionally for rapid prototyping or quickly building simple web and CLI apps
 
 To build: `mvn clean install`
+
+# Warning
+Be aware that multiple vulnerabilities exist in the following dependncies:
+- org.springframework:spring-core
+- com.google.guava:guava
+- commons-lang:commons-lang
