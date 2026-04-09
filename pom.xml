@@ -30,8 +30,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compiler.source>1.8</compiler.source>
-		<compiler.target>1.8</compiler.target>
+		<compiler.source>17</compiler.source>
+		<compiler.target>17</compiler.target>
 		<spring.version>4.1.2.RELEASE</spring.version>
 		<slf4j.version>2.0.13</slf4j.version>
 		<log4j.version>2.23.1</log4j.version>
@@ -86,8 +86,8 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>3.1.0</version>
-            </dependency>
-
+			
+			</dependency>
             <dependency>
                 <groupId>javax.servlet.jsp</groupId>
                 <artifactId>jsp-api</artifactId>
@@ -101,41 +101,32 @@
             </dependency>
 
             <dependency>
-				<groupId>javax.ws.rs</groupId>
-				<artifactId>jsr311-api</artifactId>
-				<version>1.1.1</version>
+				<groupId>jakarta.mail</groupId>
+				<artifactId>jakarta.mail-api</artifactId>
 			</dependency>
 
 			<dependency>
-				<groupId>javax.mail</groupId>
-				<artifactId>javax.mail-api</artifactId>
-				<version>1.5.2</version>
+				<groupId>org.glassfish.jersey.core</groupId>
+				<artifactId>jersey-server</artifactId>
+				<version>3.1.8</version>
 			</dependency>
 
 			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-servlet</artifactId>
-				<version>1.18.2</version>
-			</dependency>
-
-			<!-- JAXB - application/json -->
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-json</artifactId>
-				<version>1.18.2</version>
-			</dependency>
-
-			<!-- JAXB - application/fastinfoset -->
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-fastinfoset</artifactId>
-				<version>1.18.2</version>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-json-jackson</artifactId>
+				<version>3.1.8</version>
 			</dependency>
 
 			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-core-asl</artifactId>
-				<version>1.9.13</version>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-fastinfoset</artifactId>
+				<version>3.1.8</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>2.17.2</version>
 			</dependency>
 
 			<dependency>
@@ -266,6 +257,12 @@
 
 			<dependency>
 				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-reload4j</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
@@ -342,7 +339,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.2</version>
+					<version>3.11.0</version>
 				</plugin>
 
 				<plugin>
@@ -428,7 +425,7 @@
 					<failOnError>false</failOnError>
 					<additionalparam>-Xdoclint:none</additionalparam>
 					<links>
-						<link>http://docs.oracle.com/javase/8/docs/api/</link>
+						<link>https://docs.oracle.com/en/java/javase/25/docs/api/</link>
 					</links>
 				</configuration>
 			</plugin>
