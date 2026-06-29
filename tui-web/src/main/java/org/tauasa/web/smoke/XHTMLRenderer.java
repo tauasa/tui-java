@@ -174,16 +174,16 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 			println("\t<th colspan=\"2\"><font color=\"#FFFFFF\">Client Info</font></th>");
 			println("\t</tr>");
 			println("\t<tr>");
-			println("\t<td>Remote Address</td><td>", helper.getRemoteAddr(), "</td>");
+			println("\t<td>Remote Address</td><td>", escapeHtml(helper.getRemoteAddr()), "</td>");
 			println("\t</tr>");
 			println("\t<tr>");
-			println("\t<td>Request URL</td><td>", helper.getRequestURL(), "</td>");
+			println("\t<td>Request URL</td><td>", escapeHtml(helper.getRequestURL()), "</td>");
 			println("\t</tr>");
 			println("\t<tr>");
-			println("\t<td>Query String</td><td>", helper.getQueryString(), "</td>");
+			println("\t<td>Query String</td><td>", escapeHtml(helper.getQueryString()), "</td>");
 			println("\t</tr>");
 			println("\t<tr>");
-			println("\t<td>User-Agent</td><td>", helper.getUserAgent(), "</td>");
+			println("\t<td>User-Agent</td><td>", escapeHtml(helper.getUserAgent()), "</td>");
 			println("\t</tr>");
 		}
 
@@ -309,9 +309,16 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 		for(int i=0;i<keys.size();i++){
 			String key = keys.get(i);
 			if(p==null || p.matcher(key).matches()){
-				//show the property is there is no filter or a filter match
+				String value = props.get(key)!=null ? props.get(key).toString() : "";
+				String displayValue;
+				if(value.toLowerCase().startsWith("http://") || value.toLowerCase().startsWith("https://")){
+					String escaped = escapeHtml(value);
+					displayValue = "<a href=\""+escaped+"\">" + escaped + "</a>";
+				} else {
+					displayValue = escapeHtml(value);
+				}
 				println("\t<tr>");
-				println("\t<td>", key, "</td><td>", props.get(key), "&nbsp;</td>");
+				println("\t<td>", escapeHtml(key), "</td><td>", displayValue, "&nbsp;</td>");
 				println("\t</tr>");
 			}
 		}
@@ -330,6 +337,11 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 		}
 		mHelper.getResponse().getWriter().println();
 
+	}
+
+	private static String escapeHtml(String s){
+		if(s==null) return "";
+		return org.apache.commons.lang.StringEscapeUtils.escapeHtml(s);
 	}
 
 }

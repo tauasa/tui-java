@@ -68,6 +68,17 @@ public class XmlUtils extends Utils {
 	public static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 	public static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
 
+	static {
+		try {
+			DOCUMENT_BUILDER_FACTORY.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			DOCUMENT_BUILDER_FACTORY.setFeature("http://xml.org/sax/features/external-general-entities", false);
+			DOCUMENT_BUILDER_FACTORY.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+			DOCUMENT_BUILDER_FACTORY.setExpandEntityReferences(false);
+		} catch (ParserConfigurationException e) {
+			throw new ExceptionInInitializerError(e);
+		}
+	}
+
 
 	/**
 	 * Adds the specified child Document to the specified target Node that is a child of parent

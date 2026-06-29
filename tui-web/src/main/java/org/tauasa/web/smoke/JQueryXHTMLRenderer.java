@@ -268,16 +268,16 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 			println("\t<th colspan=\"2\"><font color=\"#FFFFFF\">Client Info</font></th>");
 			println("\t</tr>");
 			println("\t<tr>");
-			println("\t<td>Remote Address</td><td>", helper.getRemoteAddr(), "</td>");
+			println("\t<td>Remote Address</td><td>", escapeHtml(helper.getRemoteAddr()), "</td>");
 			println("\t</tr>");
 			println("\t<tr>");
-			println("\t<td>Request URL</td><td>", helper.getRequestURL(), "</td>");
+			println("\t<td>Request URL</td><td>", escapeHtml(helper.getRequestURL()), "</td>");
 			println("\t</tr>");
 			println("\t<tr>");
-			println("\t<td>Query String</td><td>", helper.getQueryString(), "</td>");
+			println("\t<td>Query String</td><td>", escapeHtml(helper.getQueryString()), "</td>");
 			println("\t</tr>");
 			println("\t<tr>");
-			println("\t<td>User-Agent</td><td>", helper.getUserAgent(), "</td>");
+			println("\t<td>User-Agent</td><td>", escapeHtml(helper.getUserAgent()), "</td>");
 			println("\t</tr>");
 		}
 
@@ -479,8 +479,11 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 			String key = keys.get(i).toString();
 			if(p==null || p.matcher(key).matches()){
 				String value = props.get(key)!=null ? props.get(key).toString() : "";
-				if(value.toLowerCase().startsWith("http")){
-					value = "<a href=\""+value+"\">" + value + "</a>";
+				if(value.toLowerCase().startsWith("http://") || value.toLowerCase().startsWith("https://")){
+					String escaped = escapeHtml(value);
+					value = "<a href=\""+escaped+"\">" + escaped + "</a>";
+				} else {
+					value = escapeHtml(value);
 				}
 				//show the property is there is no filter or a filter match
 				println("\t<tr>");
@@ -503,6 +506,11 @@ public class JQueryXHTMLRenderer implements ISmoketestResultsRenderer {
 		}
 		mHelper.getResponse().getWriter().println();
 
+	}
+
+	private static String escapeHtml(String s){
+		if(s==null) return "";
+		return org.apache.commons.lang.StringEscapeUtils.escapeHtml(s);
 	}
 
 }
