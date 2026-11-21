@@ -28,7 +28,7 @@ Java 17 or later. `tui-mail` brings in `tui-commons`, and `tui-web` brings in bo
 <dependency>
   <groupId>org.tauasa</groupId>
   <artifactId>tui-commons</artifactId>   <!-- or tui-mail, tui-web -->
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
@@ -44,7 +44,7 @@ Two classes need a library you add yourself:
 | `SpringApplicationContext` | `org.springframework:spring-context` (any Spring your app already uses) |
 | `StringDistanceUtils` | `com.wcohen:com.wcohen.secondstring:0.1`, which brings log4j 1.2.17 with known vulnerabilities |
 
-## Changes in 1.0.2 (not yet released)
+## Changes in 1.0.2
 
 - **commons-lang is gone**, which also removes commons-lang 2.1's known
   uncontrolled-recursion vulnerability. If your code used commons-lang through
