@@ -44,6 +44,20 @@ Two classes need a library you add yourself:
 | `SpringApplicationContext` | `org.springframework:spring-context` (any Spring your app already uses) |
 | `StringDistanceUtils` | `com.wcohen:com.wcohen.secondstring:0.1`, which brings log4j 1.2.17 with known vulnerabilities |
 
+## Changes in 1.0.2 (not yet released)
+
+- **commons-lang is gone**, which also removes commons-lang 2.1's known
+  uncontrolled-recursion vulnerability. If your code used commons-lang through
+  this library, add it to your own POM.
+- **HTML escaping is JDK code**: `Utils.escapeHtml(String)` replaces
+  `StringEscapeUtils.escapeHtml` in `HTMLDataModelWriter` and the smoke-test
+  renderers. It now escapes the single quote too, so escaped text is safe in an
+  attribute quoted with either quote. Characters outside printable ASCII come
+  out as numeric references (`&#233;` for `é`) in place of named ones
+  (`&eacute;`): they display the same, and they're valid XHTML.
+- **`toString()` uses `Utils.toStringOf`** in `GeohashBean`, `Host` and
+  `RequestBean`, in the same `Type@hash[name=value,...]` form as before.
+
 ## Changes in 1.0.1
 
 Several of these change behavior. Read them before upgrading.
