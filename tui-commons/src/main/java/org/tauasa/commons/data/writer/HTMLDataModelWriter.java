@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import org.tauasa.commons.data.DataModelException;
 import org.tauasa.commons.data.IDataModel;
 import org.tauasa.commons.util.Utils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Simple {@link IDataModelWriter} implementation that writes an {@link IDataModel} as an HTML table
@@ -81,12 +82,17 @@ public class HTMLDataModelWriter extends AbstractDataModelWriter {
 		return buffer.toString();
 	}
 
+	/** Escapes text for HTML, so a value from a data row can't add markup or script to the page */
+	private static String esc(String s){
+		return s==null ? "" : StringEscapeUtils.escapeHtml(s);
+	}
+
         @Override
 	public void write(IDataModel data) throws DataModelException, IOException {
 		writeln("<html>");
 		writeln("<head>");
 		write("<title>");
-		write(title);
+		write(esc(title));
 		writeln("</title>");
 
 		writeln(createStyleSheet());
@@ -100,7 +106,7 @@ public class HTMLDataModelWriter extends AbstractDataModelWriter {
 		}
 
 		write("<h1 class=\"default\">");
-		write(header);
+		write(esc(header));
 		writeln("</h1>");
 
 		if(subHeader!=null){
@@ -120,7 +126,7 @@ public class HTMLDataModelWriter extends AbstractDataModelWriter {
 		String[] columns = data.getColumnNames();
 		for (String column : columns) {
 			write("<th class=\"default\">");
-			write(column);
+			write(esc(column));
 			writeln("</th>");
 		}
 		writeln("</tr>");
@@ -134,7 +140,8 @@ public class HTMLDataModelWriter extends AbstractDataModelWriter {
 
 			for(int i=0;i<columns.length;i++){
 				write("<td class=\"default\">");
-				write(data.getObject(i));
+				Object value = data.getObject(i);
+				write(value==null ? "" : esc(value.toString()));
 				writeln("</td>");
 			}
 
