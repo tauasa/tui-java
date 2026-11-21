@@ -7,7 +7,7 @@ It evolved as java evolved beginning with `JDK1.1`. Active development ended aro
 
 Most of the functionality in this library is available via Spring, Guice, Apache Commons, and/or later JDK releases. I still use it out of habit and because it's easy.
 
-A lot of this project is `code archeology` without unit tests. It's still used in a few legacy/enterprise production environments but use at your own risk.
+A lot of this project is `code archeology`. Its unit tests cover the security fixes in 1.0.1, not the whole library. It's still used in a few legacy/enterprise production environments but use at your own risk.
 
 I've gotten the most mileage out of these classes 
 | Class | Module      |
@@ -20,8 +20,9 @@ I've gotten the most mileage out of these classes
 
 # Use it
 
-Each module is a separate artifact under `org.tauasa`. `tui-mail` brings in
-`tui-commons`, and `tui-web` brings in both:
+Each module is a separate artifact under `org.tauasa` on
+[Maven Central](https://central.sonatype.com/namespace/org.tauasa), built for
+Java 17 or later. `tui-mail` brings in `tui-commons`, and `tui-web` brings in both:
 
 ```xml
 <dependency>
@@ -90,9 +91,14 @@ Several of these change behavior. Read them before upgrading.
   same version, and every version is pinned.
 
 # Build
+
+Needs JDK 17 or later. This builds all three modules and runs the tests:
+
 ```bash
 mvn clean install
 ```
+
+GitHub Actions runs the same build on every push and pull request.
 
 [RELEASING.md](RELEASING.md) has how a version goes to Maven Central. MIT
 licensed: see [LICENSE](LICENSE).
