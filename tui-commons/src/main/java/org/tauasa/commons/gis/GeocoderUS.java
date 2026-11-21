@@ -37,7 +37,7 @@ import org.tauasa.commons.util.Utils;
 public class GeocoderUS extends AbstractGeocoder {
 
 	private static final Logger logger = LoggerFactory.getLogger(GeocoderUS.class);
-	public static final String DEFAULT_URL = "http://rpc.geocoder.us/service/csv";
+	public static final String DEFAULT_URL = "https://rpc.geocoder.us/service/csv";
 
 	private String userName, password, url=DEFAULT_URL;
 

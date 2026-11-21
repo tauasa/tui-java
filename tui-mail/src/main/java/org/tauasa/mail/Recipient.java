@@ -58,7 +58,7 @@ public class Recipient implements Serializable {
 	}
 
 	public Recipient(String emailAddress, String personal, Message.RecipientType type)throws AddressException, UnsupportedEncodingException{
-		this(new InternetAddress(emailAddress, personal), type);
+		this(new InternetAddress(emailAddress, singleLine(personal)), type);
 	}
 
 	public Recipient(String emailAddress)throws AddressException{
@@ -66,7 +66,18 @@ public class Recipient implements Serializable {
 	}
 
 	public Recipient(String emailAddress, String personal)throws AddressException, UnsupportedEncodingException{
-		this(new InternetAddress(emailAddress, personal));
+		this(new InternetAddress(emailAddress, singleLine(personal)));
+	}
+
+	/**
+	 * Refuses a display name with a carriage return or line feed in it, which would
+	 * let the rest of the name add mail headers of its own, such as a Bcc
+	 * */
+	static String singleLine(String personal)throws AddressException{
+		if(personal!=null && (personal.indexOf('\r')>=0 || personal.indexOf('\n')>=0)){
+			throw new AddressException("The recipient name contains a line break, which could inject mail headers");
+		}
+		return personal;
 	}
 
 	public Address getAddress() {

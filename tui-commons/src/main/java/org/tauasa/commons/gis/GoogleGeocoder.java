@@ -46,7 +46,7 @@ public final class GoogleGeocoder extends AbstractGeocoder {
 	private static final String HTTP_SCHEME= "http";
 	private static final String HTTPS_SCHEME = "https";
 
-	private boolean useSsl, sensor;
+	private boolean useSsl = true, sensor;
 	private int timeout = 1000;
 
 	public GoogleGeocoder() {

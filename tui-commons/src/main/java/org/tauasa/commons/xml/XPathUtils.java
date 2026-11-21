@@ -68,17 +68,23 @@ public class XPathUtils extends XmlUtils {
 	}
 
 	/**
-	 * Shortcut method for creating and evaluating an XPath expression against the specified InputSource
+	 * Shortcut method for creating and evaluating an XPath expression against the specified InputSource.
+	 * The XML is parsed with {@link XmlUtils#createDocument(InputSource)}, which refuses DOCTYPEs and
+	 * external entities, so untrusted XML can't read local files or reach other hosts
 	 * */
-	public static String evaluate(InputSource in, String expression)throws XPathExpressionException{
-		return compile(expression).evaluate(in);
+	public static String evaluate(InputSource in, String expression)throws XPathExpressionException, ParserConfigurationException,
+		IOException, SAXException{
+		return compile(expression).evaluate(XmlUtils.createDocument(in));
 	}
 
 	/**
-	 * Shortcut method for creating and evaluating an XPath expression against the specified InputStream
+	 * Shortcut method for creating and evaluating an XPath expression against the specified InputStream.
+	 * The XML is parsed with {@link XmlUtils#createDocument(InputStream)}, which refuses DOCTYPEs and
+	 * external entities, so untrusted XML can't read local files or reach other hosts
 	 * */
-	public static String evaluate(InputStream in, String expression)throws XPathExpressionException{
-		return compile(expression).evaluate(in);
+	public static String evaluate(InputStream in, String expression)throws XPathExpressionException, ParserConfigurationException,
+		IOException, SAXException{
+		return compile(expression).evaluate(XmlUtils.createDocument(in));
 	}
 
 	/**

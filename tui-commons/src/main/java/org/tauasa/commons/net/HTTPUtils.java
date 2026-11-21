@@ -23,25 +23,26 @@
  */
 package org.tauasa.commons.net;
 
+import java.io.IOException;
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.StringJoiner;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpConnectionManager;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tauasa.commons.io.XInputStreamReader;
 import org.tauasa.commons.util.Utils;
 import org.tauasa.commons.xml.XmlUtils;
 import org.w3c.dom.Document;
@@ -50,8 +51,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 /**
- * Static utility methods for performing HTTP GET and POST operations. This class
- * is backed by the Apache {@link HttpClient}
+ * Static utility methods for performing HTTP GET and POST operations, backed by
+ * the JDK's {@link HttpClient}. HTTPS certificates and host names are always
+ * checked, every request has a timeout, and Basic credentials are only ever sent
+ * to the URL they were given for, over HTTPS.
  *
  * @author Tauasa Timoteo
  * 
@@ -61,13 +64,12 @@ public class HTTPUtils {
 	private static final Logger logger = LoggerFactory.getLogger(HTTPUtils.class);
 
 	/**
-	 * Default connection timeout in milliseconds. This property can be overridden
-	 * with the {@value #DEFAULT_TIMEOUT_KEY} system property. A value of zero (the default)
-	 * means a timeout should not be used (so you should probably set this, duh)
+	 * Default timeout in milliseconds, used for connecting and again for the whole
+	 * response. Override it with the {@value #DEFAULT_TIMEOUT_KEY} system property
 	 * */
-	public static final int DEFAULT_TIMEOUT = 0;
+	public static final int DEFAULT_TIMEOUT = 30000;
 	/**
-	 * System property key for the default connection timeout
+	 * System property key for the default timeout
 	 * */
 	public static final String DEFAULT_TIMEOUT_KEY = String.format("%s.timeout", HTTPUtils.class.getName());
 
@@ -75,169 +77,148 @@ public class HTTPUtils {
 	}
 
 	/**
-	 * Creates an Apache {@link HttpClient} from the specified {@link Configuration}, posts a payload to the specified URL,
-	 * and returns a {@link HttpResponse} object. The payload is usually an XML/SOAP document
+	 * Posts a payload, usually an XML/SOAP document, to the specified URL. Redirects
+	 * aren't followed: a redirect would carry the payload's headers, which can hold
+	 * credentials, to another host, and turn the POST into a GET
 	 * */
-	public static HttpResponse postPayload(String strUrl, Payload payload, Configuration config)throws Exception{
+	public static HttpResponse postPayload(String strUrl, Payload payload, Configuration config)throws IOException, InterruptedException{
 		if(logger.isDebugEnabled()){
 			logger.debug(String.format("Posting %d byte payload to %s", payload.getSize(), strUrl));
 		}
-		HttpClient client = createHttpClient(config);
-
-		PostMethod method = new PostMethod(strUrl);
-		method.setRequestEntity(new ByteArrayRequestEntity(payload.getContent(), payload.getContentType()));
+		HttpRequest.Builder req = request(strUrl, config)
+				.POST(HttpRequest.BodyPublishers.ofByteArray(payload.getContent()));
+		if(!Utils.isEmpty(payload.getContentType())){
+			req.header("Content-Type", payload.getContentType());
+		}
 		if(payload.getHeaders()!=null){
-			Set<String> names = payload.getHeaders().keySet();
-			for (String name : names) {
-				Object value = payload.getHeaders().get(name);
+			payload.getHeaders().forEach((name, value) -> {
 				if(value!=null){
-					method.setRequestHeader(name, value.toString());
+					req.header(name, value);
 				}
-			}
+			});
 		}
-
-		try{
-			return execute(client, method);
-		}finally{
-			method.releaseConnection();
-		}
+		return execute(createHttpClient(config, HttpClient.Redirect.NEVER), req.build());
 	}
 
 	/**
-	 * Equivalent to {@link #postPayload(String, byte[], Configuration)} with a null {@link Configuration} object
+	 * Equivalent to {@link #postPayload(String, Payload, Configuration)} with a null {@link Configuration}
 	 * */
-	public static HttpResponse postPayload(String strUrl, Payload payload)throws Exception{
+	public static HttpResponse postPayload(String strUrl, Payload payload)throws IOException, InterruptedException{
 		return postPayload(strUrl, payload, null);
-
 	}
 
 	/**
-	 * Creates an Apache {@link HttpClient} from the specified {@link Configuration} and posts the specified
-	 * parameters to an URL and returns a {@link HttpResponse} object
+	 * Posts the parameters to the specified URL as an
+	 * {@code application/x-www-form-urlencoded} form. Redirects aren't followed, as
+	 * for {@link #postPayload(String, Payload, Configuration)}
 	 * */
-	public static HttpResponse doPost(String strUrl, Map<String, ?> parameters, Configuration config)throws Exception{
+	public static HttpResponse doPost(String strUrl, Map<String, ?> parameters, Configuration config)throws IOException, InterruptedException{
 		if(logger.isDebugEnabled()){
 			logger.debug(String.format("HTTP POST %s with %d parameters", strUrl, parameters==null?0:parameters.size()));
 		}
-		HttpClient client = createHttpClient(config);
-
-		PostMethod method = new PostMethod(strUrl);
-
+		StringJoiner form = new StringJoiner("&");
 		if(!Utils.isEmpty(parameters)){
-			parameters.keySet().forEach(key -> {
-				String val = parameters.get(key)==null ? "" : parameters.get(key).toString();
-				if(logger.isDebugEnabled()){
-					logger.debug(String.format("Parameter: %s=%s", key, val));
-				}
-				method.addParameter(key, val);
-			});
+			parameters.forEach((key, value) -> form.add(URLEncoder.encode(key, StandardCharsets.UTF_8) + "="
+					+ URLEncoder.encode(value==null ? "" : value.toString(), StandardCharsets.UTF_8)));
 		}
-
-		try{
-			return execute(client, method);
-		}finally{
-			method.releaseConnection();
-		}
+		HttpRequest req = request(strUrl, config)
+				.header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+				.POST(HttpRequest.BodyPublishers.ofString(form.toString(), StandardCharsets.UTF_8))
+				.build();
+		return execute(createHttpClient(config, HttpClient.Redirect.NEVER), req);
 	}
 
 	/**
-	 * Posts parameters to the specified URL using a default Apache {@link HttpClient}
+	 * Posts parameters to the specified URL with the default {@link Configuration}
 	 * */
-	public static HttpResponse doPost(String strUrl, Map<String, ?> parameters)throws Exception{
+	public static HttpResponse doPost(String strUrl, Map<String, ?> parameters)throws IOException, InterruptedException{
 		return doPost(strUrl, parameters, null);
 	}
 
 	/**
-	 * Creates an Apache {@link HttpClient} from the specified {@link Configuration} and gets the content of the specified URL
+	 * Gets the content of the specified URL
 	 * */
-	public static HttpResponse doGet(String strUrl, Configuration config)throws Exception{
+	public static HttpResponse doGet(String strUrl, Configuration config)throws IOException, InterruptedException{
 		return doGet(strUrl, null, null, config);
 	}
 
-	public static HttpResponse doGet(String strUrl, int connectionTimeout)throws Exception{
+	/**
+	 * Gets the content of the specified URL with the given timeout in milliseconds
+	 * */
+	public static HttpResponse doGet(String strUrl, int connectionTimeout)throws IOException, InterruptedException{
 		return doGet(strUrl, null, null, new Configuration(connectionTimeout));
 	}
 
 	/**
-	 * Creates an Apache {@link HttpClient} from the specified {@link Configuration} and gets the content of the specified URL
-	 * using Basic authentication if necessary
+	 * Gets the content of the specified URL, using Basic authentication when a user
+	 * name and password are given. Credentials are sent only to this URL: never over
+	 * plain HTTP, and redirects aren't followed, so they can't be passed to another host.
+	 *
+	 * @throws IllegalArgumentException if credentials are given for a URL that isn't {@code https}
 	 * */
-	public static HttpResponse doGet(String strUrl, String userName, String password, Configuration config)throws Exception{
+	public static HttpResponse doGet(String strUrl, String userName, String password, Configuration config)throws IOException, InterruptedException{
 		if(logger.isDebugEnabled()){
 			logger.debug(String.format("HTTP GET %s", strUrl));
 		}
-		HttpClient client = createHttpClient(config);
-
-		GetMethod method = new GetMethod(strUrl);
-
-		if(!Utils.isEmpty(userName) && !Utils.isEmpty(password)){
-			//setup Basic authentication
-			if(logger.isDebugEnabled()){
-				logger.debug("Performing basic authentication");
+		HttpRequest.Builder req = request(strUrl, config).GET();
+		boolean auth = !Utils.isEmpty(userName) && !Utils.isEmpty(password);
+		if(auth){
+			if(!"https".equalsIgnoreCase(URI.create(strUrl).getScheme())){
+				throw new IllegalArgumentException("Basic credentials would be sent in clear text to " + strUrl
+						+ ": use an https URL");
 			}
-			client.getState().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(userName, password));
-			method.setDoAuthentication(true);
+			String token = Base64.getEncoder().encodeToString((userName + ":" + password).getBytes(StandardCharsets.UTF_8));
+			req.header("Authorization", "Basic " + token);
 		}
-
-		try{
-			return execute(client, method);
-		}finally{
-			method.releaseConnection();
-		}
+		HttpClient client = auth ? createHttpClient(config, HttpClient.Redirect.NEVER) : createHttpClient(config);
+		return execute(client, req.build());
 	}
 
 	/**
-	 * Gets the content of the specified URL using a default Apache {@link HttpClient}
+	 * Gets the content of the specified URL with the default {@link Configuration}
 	 * */
-	public static HttpResponse doGet(String strUrl)throws Exception{
+	public static HttpResponse doGet(String strUrl)throws IOException, InterruptedException{
 		return doGet(strUrl, null, null, null);
 	}
 
 	/**
-	 * Gets the content of the specified URL using a default Apache {@link HttpClient} and using the specified
-	 * username/password for Basic Authentication
+	 * Gets the content of the specified URL, using the user name and password for
+	 * Basic authentication over HTTPS
 	 * */
-	public static HttpResponse doGet(String strUrl, String userName, String password)throws Exception{
+	public static HttpResponse doGet(String strUrl, String userName, String password)throws IOException, InterruptedException{
 		return doGet(strUrl, userName, password, null);
 	}
 
 	/**
-	 * Creates a new instance of Apache {@link HttpClient} with a default connection timeout of {@value #DEFAULT_TIMEOUT}ms.
-	 * The timeout used by this method can be overridden in the {@value #DEFAULT_TIMEOUT_KEY} system property
+	 * Creates an {@link HttpClient} with the default timeout, {@value #DEFAULT_TIMEOUT}ms
+	 * unless the {@value #DEFAULT_TIMEOUT_KEY} system property overrides it
 	 * */
 	public static HttpClient createHttpClient(){
-		return createHttpClient(Integer.parseInt(System.getProperty(DEFAULT_TIMEOUT_KEY, String.valueOf(DEFAULT_TIMEOUT))));
+		return createHttpClient(new Configuration());
 	}
 
 	/**
-	 * Creates a new instance of Apache {@link HttpClient} with the specified connection timeout
+	 * Creates an {@link HttpClient} with the specified timeout in milliseconds
 	 * */
 	public static HttpClient createHttpClient(int connectionTimeout){
 		return createHttpClient(new Configuration(connectionTimeout));
 	}
 
 	/**
-	 * Creates a new instance of Apache {@link HttpClient} with the specified connection timeout and proxy settings
+	 * Creates an {@link HttpClient} with the specified timeout and proxy settings.
+	 * It follows redirects, except from HTTPS to HTTP
 	 * */
 	public static HttpClient createHttpClient(Configuration config){
-		if(logger.isDebugEnabled()){
-			logger.debug("Creating HttpClient");
-		}
+		return createHttpClient(config, HttpClient.Redirect.NORMAL);
+	}
+
+	private static HttpClient createHttpClient(Configuration config, HttpClient.Redirect redirect){
 		if(config==null){
 			config = new Configuration();
 		}
-
-		HttpClient client = new HttpClient();
-		HttpConnectionManager connManager = client.getHttpConnectionManager();
-		HttpConnectionManagerParams params = connManager.getParams();
-
-		//set the connection timeout in milliseconds
-		if(config.connectionTimeout > 0){
-			if(logger.isDebugEnabled()){
-				logger.debug(String.format("HttpClient connection timeout: %d", config.connectionTimeout));
-			}
-			params.setConnectionTimeout(config.connectionTimeout);
-		}
+		HttpClient.Builder b = HttpClient.newBuilder()
+				.connectTimeout(timeout(config))
+				.followRedirects(redirect);
 
 		if(!Utils.isEmpty(config.proxyHost)){
 			if(config.proxyPort < 1){
@@ -246,20 +227,34 @@ public class HTTPUtils {
 			if(logger.isDebugEnabled()){
 				logger.debug(String.format("Setting proxy to %s:%d", config.proxyHost, config.proxyPort));
 			}
-
-			HostConfiguration cfg = client.getHostConfiguration();
-			cfg.setProxy(config.proxyHost, config.proxyPort);
+			b.proxy(ProxySelector.of(new InetSocketAddress(config.proxyHost, config.proxyPort)));
 
 			if(!Utils.isEmpty(config.proxyUser) && !Utils.isEmpty(config.proxyPass)){
-				if(logger.isDebugEnabled()){
-					logger.debug(String.format("Setting proxy authorization to %s/%s", config.proxyUser, config.proxyPass));
-				}
-				HttpState state = client.getState();
-				state.setProxyCredentials(AuthScope.ANY, new
-						UsernamePasswordCredentials(config.proxyUser, config.proxyPass));
+				final String user = config.proxyUser;
+				final char[] pass = config.proxyPass.toCharArray();
+				// Answers only the proxy's challenge, never the target server's.
+				b.authenticator(new Authenticator() {
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return getRequestorType()==RequestorType.PROXY ? new PasswordAuthentication(user, pass) : null;
+					}
+				});
 			}
 		}
-		return client;
+		return b.build();
+	}
+
+	private static HttpRequest.Builder request(String strUrl, Configuration config){
+		return HttpRequest.newBuilder(URI.create(strUrl)).timeout(timeout(config));
+	}
+
+	/** The configured timeout, or the default when it's zero or less */
+	private static Duration timeout(Configuration config){
+		int ms = config==null ? 0 : config.connectionTimeout;
+		if(ms <= 0){
+			ms = Integer.getInteger(DEFAULT_TIMEOUT_KEY, DEFAULT_TIMEOUT);
+		}
+		return Duration.ofMillis(ms);
 	}
 
 	/**
@@ -286,7 +281,7 @@ public class HTTPUtils {
 		}
 
 		public Payload(String content, String contentType, HashMap<String, String> headers)throws Exception{
-			this(content.getBytes(), contentType, headers);
+			this(content.getBytes(StandardCharsets.UTF_8), contentType, headers);
 		}
 
 		public Payload(byte[] content, String contentType) {
@@ -350,25 +345,18 @@ public class HTTPUtils {
 	}
 
 	/**
-	 * Executes an {@link HttpMethod} on the specified {@link HttpClient} and returns a new {@link HttpResponse}
+	 * Sends the request and wraps what comes back in a new {@link HttpResponse}
 	 * */
-	private static HttpResponse execute(HttpClient client, HttpMethod method)throws Exception{
+	private static HttpResponse execute(HttpClient client, HttpRequest req)throws IOException, InterruptedException{
+		java.net.http.HttpResponse<byte[]> r = client.send(req, BodyHandlers.ofByteArray());
 		if(logger.isDebugEnabled()){
-			logger.debug(String.format("Executing %s method", method.getName()));
+			logger.debug(String.format("Response code: %d", r.statusCode()));
 		}
-		int code = client.executeMethod(method);
-		if(logger.isDebugEnabled()){
-			logger.debug(String.format("Response code: %d", code));
-		}
-		HttpResponse res = new HttpResponse(code, XInputStreamReader.readBytes(method.getResponseBodyAsStream()));
-		Header[] headers = method.getResponseHeaders();
-		for (Header header : headers) {
-			String name = header.getName();
-			String value = header.getValue();
-			if(logger.isDebugEnabled()){
-				logger.debug(String.format("Response header: %s = %s", name, value));
+		HttpResponse res = new HttpResponse(r.statusCode(), r.body());
+		for (Map.Entry<String, List<String>> h : r.headers().map().entrySet()) {
+			if(!h.getValue().isEmpty()){
+				res.addHeader(h.getKey(), h.getValue().get(0));
 			}
-			res.addHeader(name, value);
 		}
 		return res;
 	}
@@ -424,7 +412,7 @@ public class HTTPUtils {
 		 * Returns the body of this response as a {@link String}
 		 * */
 		public String getBodyAsString(){
-			return body==null ? null : new String(body);
+			return body==null ? null : new String(body, StandardCharsets.UTF_8);
 		}
 		/**
 		 * Equivalent to invoking {@link #getHeader(String)} with a name of \"{@value #CONTENT_TYPE}\"
@@ -448,11 +436,12 @@ public class HTTPUtils {
 	}
 
 	/**
-	 * Simple configuration bean for Apache {@link HttpClient}
+	 * Connection timeout and proxy settings for the {@link HttpClient}s this class creates
 	 * */
 	public static class Configuration{
 		/**
-		 * Connection timeout in milliseconds
+		 * Timeout in milliseconds, for connecting and again for the whole response.
+		 * Zero or less means {@value HTTPUtils#DEFAULT_TIMEOUT}
 		 * */
 		int connectionTimeout;
 		/**

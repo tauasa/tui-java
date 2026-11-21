@@ -51,7 +51,9 @@ public class JSTL{
 
 	public static boolean isUserInRole(HttpServletRequest req, String[] roles){
 		if(Utils.isEmpty(roles)){
-			return true;
+			// No roles means nobody passes: a missing or misspelled setting
+			// must not let everyone in.
+			return false;
 		}
 		for(String role : roles){
 			if(isUserInRole(req, role)){
