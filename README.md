@@ -18,10 +18,45 @@ I've gotten the most mileage out of these classes
 | [XFile](./tui-commons/src/main/java/org/tauasa/commons/io/XFile.java) | tui-commons |
 | [ServletHelper](./tui-web/src/main/java/org/tauasa/web/ServletHelper.java) | tui-web |
 
+# Use it
+
+Each module is a separate artifact under `org.tauasa`. `tui-mail` brings in
+`tui-commons`, and `tui-web` brings in both:
+
+```xml
+<dependency>
+  <groupId>org.tauasa</groupId>
+  <artifactId>tui-commons</artifactId>   <!-- or tui-mail, tui-web -->
+  <version>1.0.1</version>
+</dependency>
+```
+
+The library logs through SLF4J and doesn't choose a logging backend for you:
+add the SLF4J binding your app uses, such as `slf4j-simple` or `logback-classic`.
+`tui-mail` and `tui-web` also expect your container to provide
+`javax.mail-api` and `javax.servlet-api`.
+
+Several dependencies are old, and some have known vulnerabilities (Spring 4.1,
+Guava 17, commons-httpclient 3.1, and log4j 1.2.17 through secondstring).
+1.0.1 doesn't upgrade them. Check them against your own requirements before
+you depend on this.
+
+## Changes in 1.0.1
+
+- `JQueryXHTMLRenderer` is gone, with the jQuery 1.3.2 and jQuery UI 1.7.2
+  files it served, which have known XSS vulnerabilities. If your
+  `smoketest.properties` names it, `SmoketestServlet` stops at startup and says
+  to use `org.tauasa.web.smoke.XHTMLRenderer` instead.
+- The modules depend on each other at the same version, and no dependency
+  uses an open version range.
+
 # Build
 ```bash
 mvn clean install
 ```
+
+[RELEASING.md](RELEASING.md) has how a version goes to Maven Central. MIT
+licensed: see [LICENSE](LICENSE).
 
 
 

@@ -23,17 +23,12 @@
  */
 package org.tauasa.web.smoke;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -67,10 +62,8 @@ public class SmoketestServlet extends HttpServlet{
 	public static final String SMOKETEST_ALLOW_VIRTUAL_HOST_KEY = "smoketest.allow.virtual.host";
 	public static final String SMOKETEST_EXCEPTION_HANDLER = "smoketest.exception.handler";
 
-	public static final String JQUERY_PATH = "/jquery-ui-1.7.2.custom.zip";
-	public static final String CACHED_RESOURCE_PARAM = "_cache";
 	public static final String RESOURCE_FILE_PARAM = "_res";
-	private static final int CACHE_BUFFER_SIZE = 32768;
+	private static final String REMOVED_JQUERY_RENDERER = "org.tauasa.web.smoke.JQueryXHTMLRenderer";
 
 	/**
 	 * String array of paths to resources files that may be downloaded
@@ -89,115 +82,15 @@ public class SmoketestServlet extends HttpServlet{
 	private ISmoketestResultsRenderer renderer;
 	private boolean allowVirtualHost = true;
 	private ISmoketestExceptionHandler exceptionHandler;
-	private Map<String, CacheResource> cachedResources;
 
 	public SmoketestServlet() {
 
-	}
-
-	private static String getContentTypeForName(String name){
-		String n = name.toLowerCase();
-		if(n.endsWith(".js")){
-			return "text/javascript";
-		}else if(n.endsWith(".css")){
-			return "text/css";
-		}else if(n.endsWith(".png")){
-			return "image/PNG";
-		}else if(n.endsWith(".jpg") || n.endsWith(".jpeg")){
-			return "image/JPEG";
-		}else if(n.endsWith(".gif")){
-			return "image/GIF";
-		}
-		return "text/plain";
-	}
-
-	public static Map<String, CacheResource> loadCacheResourcesFromZip(String zipPath)throws Exception{
-		HashMap<String, CacheResource> map = new HashMap<>();
-
-		ZipInputStream zipIn = new ZipInputStream(SmoketestServlet.class.getResourceAsStream(zipPath));
-
-		byte[] buffer = new byte[CACHE_BUFFER_SIZE];
-
-		ZipEntry entry;
-
-		while((entry=zipIn.getNextEntry())!=null){
-			String name = entry.getName();
-			byte[] content;
-			try (ByteArrayOutputStream bOut = new ByteArrayOutputStream()) {
-				int n;
-				while ((n = zipIn.read(buffer, 0, CACHE_BUFFER_SIZE)) > -1){
-					bOut.write(buffer, 0, n);
-				}
-				content = bOut.toByteArray();
-				if(content.length==0){
-					continue;//skip empty content
-				}
-			}
-			zipIn.closeEntry();
-
-			map.put(name, new CacheResource(getContentTypeForName(name), content));
-		}
-
-		return map;
-	}
-
-	private void initCachedResources()throws Exception {
-		//extract jQuery stuff from zip file and add to the cache
-		cachedResources = loadCacheResourcesFromZip(JQUERY_PATH);
-
-	}
-
-	/**
-	 * Streams the resource requested in the {@value #CACHED_RESOURCE_PARAM} parameter
-	 * */
-	private void streamCachedResource(ServletHelper helper)throws IOException, ServletException{
-		String resPath = helper.getParam(CACHED_RESOURCE_PARAM);
-		if(Utils.isEmpty(cachedResources)){
-			logger.warn("Could not load cached resource for "+resPath+" because the cache is empty");
-			return;
-		}
-
-		CacheResource res = cachedResources.get(resPath);
-		if(res==null){
-			logger.warn("Cached resource for "+resPath+" does not exist");
-			return;
-		}
-
-		logger.info("Writing cached resource "+resPath);
-
-		helper.setContentType(res.contentType);
-            try (ServletOutputStream out = helper.getOutputStream()) {
-                out.write(res.content);
-                out.flush();
-            }
-	}
-
-	public static class CacheResource{
-		String contentType;
-		byte[] content;
-		CacheResource(String contentType, byte[] content){
-			this.contentType=contentType;
-			this.content=content;
-		}
-		public String getContentType(){
-			return contentType;
-		}
-		public byte[] getContent(){
-			return content;
-		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-
-		//load jquery stuff into a cache so it can be served from this servlet
-		try{
-			initCachedResources();
-		}catch(Exception e){
-			logger.error("Could not load "+JQUERY_PATH+" into memory", e);
-		}
 
 		if(logger.isInfoEnabled()){
 			logger.info(String.format("Initializing from %s", PROPERTIES_FILE));
@@ -245,6 +138,12 @@ public class SmoketestServlet extends HttpServlet{
 		String strRenderer = smoketestProperties.getProperty(SMOKETEST_RENDERER_KEY);
 		if(Utils.isEmpty(strRenderer)){
 			throw new ServletException(SMOKETEST_RENDERER_KEY+" is not defined in "+PROPERTIES_FILE);
+		}
+		if(strRenderer.trim().equals(REMOVED_JQUERY_RENDERER)){
+			// Removed in 1.0.1 with the jQuery 1.3.2 / jQuery UI 1.7.2 files it served,
+			// which have known XSS vulnerabilities.
+			throw new ServletException(REMOVED_JQUERY_RENDERER+" was removed in tui-web 1.0.1. Set "
+					+SMOKETEST_RENDERER_KEY+" in "+PROPERTIES_FILE+" to "+XHTMLRenderer.class.getName());
 		}
 		logger.info("Creating ISmoketestResultsRenderer of type "+strRenderer);
 		try{
@@ -347,12 +246,6 @@ public class SmoketestServlet extends HttpServlet{
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		ServletHelper helper = new ServletHelper(super.getServletContext(), req, resp);
-
-		//handle request for a cached resource
-		if(helper.paramExists(CACHED_RESOURCE_PARAM)){
-			streamCachedResource(helper);
-			return;
-		}
 
 		//handle request for streaming a file (i.e. maven-build.properties)
 		if(helper.paramExists(RESOURCE_FILE_PARAM)){
