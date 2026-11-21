@@ -25,7 +25,7 @@ package org.tauasa.commons.gis;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.tauasa.commons.util.Utils;
 
 /**
  * Wraps a geohash
@@ -52,11 +52,10 @@ public class GeohashBean implements Serializable {
 
 	@Override
 	public String toString(){
-		return new ToStringBuilder(this).
-				append("latlon", (latlon!=null && latlon.length==2) ?
-						String.format("[%f , %f]", latlon[0], latlon[1]) : "").
-						append("geohash", geohash).
-						toString();
+		return Utils.toStringOf(this,
+				"latlon", (latlon!=null && latlon.length==2) ?
+						String.format("[%f , %f]", latlon[0], latlon[1]) : "",
+				"geohash", geohash);
 	}
 
 	public static GeohashBean create(final String geohash){

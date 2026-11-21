@@ -25,7 +25,7 @@ package org.tauasa.web;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.tauasa.commons.util.Utils;
 
 /**
  * A host consisting of name, IP address and port
@@ -59,8 +59,7 @@ public class Host implements Serializable {
 
 	@Override
 	public String toString(){
-		return new ToStringBuilder(this).append("address", address).
-				append("port", port).append("name", name).toString();
+		return Utils.toStringOf(this, "address", address, "port", port, "name", name);
 	}
 
 	public String getName() {

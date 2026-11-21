@@ -29,7 +29,6 @@ import org.tauasa.commons.data.DataModelException;
 import org.tauasa.commons.data.IDataModel;
 import org.tauasa.commons.util.DateUtils;
 import org.tauasa.commons.util.Utils;
-import org.apache.commons.lang.StringEscapeUtils;
 
 
 /**
@@ -292,7 +291,7 @@ public final class SmoketestMessage {
 	 * can't add markup or script to the page
 	 * */
 	static String esc(String s){
-		return s==null ? "" : StringEscapeUtils.escapeHtml(s);
+		return s==null ? "" : Utils.escapeHtml(s);
 	}
 
 

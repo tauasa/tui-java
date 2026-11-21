@@ -27,8 +27,7 @@ import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.tauasa.commons.util.Utils;
 
 /**
  * Convenience wrapper for various {@link HttpServletRequest} attributes
@@ -69,7 +68,10 @@ public class RequestBean implements Serializable {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE, false);
+		return Utils.toStringOf(this, "request", request, "remoteUser", remoteUser,
+				"contextPath", contextPath, "url", url, "uri", uri, "queryString", queryString,
+				"remoteAddr", remoteAddr, "remoteHost", remoteHost, "remotePort", remotePort,
+				"userAgent", userAgent, "referer", referer, "xff", xff);
 	}
 
 	public HttpServletRequest getRequest() {

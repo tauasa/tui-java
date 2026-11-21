@@ -42,6 +42,60 @@ import java.util.StringTokenizer;
  * 
  */
 public class Utils {
+
+	/**
+	 * Escapes text for HTML and XHTML, in element content and in attribute values
+	 * quoted with either quote. It escapes &amp; &lt; &gt; &quot; and the single quote,
+	 * and writes every character outside printable ASCII as a numeric character
+	 * reference, so the output is plain ASCII whatever the page's encoding.
+	 *
+	 * @param s the text to escape
+	 * @return the escaped text, or {@code null} if {@code s} is {@code null}
+	 */
+	public static String escapeHtml(String s){
+		if(s==null) return null;
+		StringBuilder b = new StringBuilder(s.length() + 16);
+		s.codePoints().forEach(c -> {
+			switch(c){
+				case '&': b.append("&amp;"); break;
+				case '<': b.append("&lt;"); break;
+				case '>': b.append("&gt;"); break;
+				case '"': b.append("&quot;"); break;
+				case '\'': b.append("&#39;"); break;
+				default:
+					if(c > 0x7E || (c < 0x20 && c != '\t' && c != '\n' && c != '\r')){
+						b.append("&#").append(c).append(';');
+					}else{
+						b.append((char)c);
+					}
+			}
+		});
+		return b.toString();
+	}
+
+	/**
+	 * Builds a {@code toString()} value in the form
+	 * {@code com.example.Type@1b6d3586[name=value,port=80]}, with {@code <null>}
+	 * for a null value.
+	 *
+	 * @param obj the object being described
+	 * @param namesAndValues field names and their values, alternately
+	 * @return the description
+	 * @throws IllegalArgumentException if {@code namesAndValues} has an odd length
+	 */
+	public static String toStringOf(Object obj, Object... namesAndValues){
+		if(namesAndValues.length % 2 != 0){
+			throw new IllegalArgumentException("namesAndValues needs a value for every name");
+		}
+		StringBuilder b = new StringBuilder(obj.getClass().getName())
+				.append('@').append(Integer.toHexString(System.identityHashCode(obj))).append('[');
+		for(int i = 0; i < namesAndValues.length; i += 2){
+			if(i > 0) b.append(',');
+			Object v = namesAndValues[i + 1];
+			b.append(namesAndValues[i]).append('=').append(v == null ? "<null>" : v);
+		}
+		return b.append(']').toString();
+	}
 	
 	public static final String UTF8 = "UTF-8";
 	public static final byte[] NEWLINE = "\r\n".getBytes();

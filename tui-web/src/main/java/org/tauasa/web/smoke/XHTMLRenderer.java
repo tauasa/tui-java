@@ -341,7 +341,7 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 
 	private static String escapeHtml(String s){
 		if(s==null) return "";
-		return org.apache.commons.lang.StringEscapeUtils.escapeHtml(s);
+		return org.tauasa.commons.util.Utils.escapeHtml(s);
 	}
 
 }

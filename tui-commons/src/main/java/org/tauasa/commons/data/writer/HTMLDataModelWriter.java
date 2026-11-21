@@ -29,7 +29,6 @@ import java.io.OutputStream;
 import org.tauasa.commons.data.DataModelException;
 import org.tauasa.commons.data.IDataModel;
 import org.tauasa.commons.util.Utils;
-import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Simple {@link IDataModelWriter} implementation that writes an {@link IDataModel} as an HTML table
@@ -84,7 +83,7 @@ public class HTMLDataModelWriter extends AbstractDataModelWriter {
 
 	/** Escapes text for HTML, so a value from a data row can't add markup or script to the page */
 	private static String esc(String s){
-		return s==null ? "" : StringEscapeUtils.escapeHtml(s);
+		return s==null ? "" : Utils.escapeHtml(s);
 	}
 
         @Override
