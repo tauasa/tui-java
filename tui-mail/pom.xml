@@ -29,6 +29,19 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>javax.activation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- A real JavaMail implementation, so tests can build MimeMessages. -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 

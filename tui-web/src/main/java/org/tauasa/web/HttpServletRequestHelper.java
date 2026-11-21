@@ -67,8 +67,9 @@ public class HttpServletRequestHelper {
 			throw new NullPointerException("HttpServletRequest is null");
 		}
 		if(Utils.isEmpty(roles)){
-			//throw new IllegalArgumentException("No roles specified");
-			return true;
+			// No roles means nobody passes: a missing or misspelled setting
+			// must not let everyone in.
+			return false;
 		}
 		for(String r : roles){
 			if(!req.isUserInRole(r)){

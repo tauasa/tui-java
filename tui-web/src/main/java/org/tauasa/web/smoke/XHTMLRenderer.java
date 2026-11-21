@@ -105,12 +105,12 @@ public class XHTMLRenderer implements ISmoketestResultsRenderer {
 		println("///////////////////////////////////////////////////////// -->");
 		println("\t<head>");
 		println("\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
-		println("\t\t<title>Smoketest: ", requestUri, "</title>");
+		println("\t\t<title>Smoketest: ", escapeHtml(requestUri), "</title>");
 		println("\t</head>");
 
 		println("\t<body>");
 
-		println("\t<h1>", requestUri, "</h1>");
+		println("\t<h1>", escapeHtml(requestUri), "</h1>");
 
 		if(!Utils.isEmpty(results)){
 			//sort the results by the starting time stamp

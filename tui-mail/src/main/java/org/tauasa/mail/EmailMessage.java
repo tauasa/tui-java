@@ -122,20 +122,31 @@ public class EmailMessage implements Serializable {
 	}
 
 	/**
+	 * Refuses a value with a carriage return or line feed in it, which would end the
+	 * header early and let the rest of the value add headers of its own, such as a Bcc
+	 * */
+	static String singleLine(String what, String value)throws MessagingException{
+		if(value!=null && (value.indexOf('\r')>=0 || value.indexOf('\n')>=0)){
+			throw new MessagingException("The " + what + " contains a line break, which could inject mail headers");
+		}
+		return value;
+	}
+
+	/**
 	 * Using the specified JavaMail {@link Session}, creates a JavaMail {@link Message}
 	 * from this object's attributes
 	 * */
 	public Message toMessage(Session session)throws MessagingException{
 		Message msg = new MimeMessage(session);
 		//set the subject
-		msg.setSubject(subject);
+		msg.setSubject(singleLine("subject", subject));
 		msg.setSentDate(new Date());
 		msg.setFrom(new InternetAddress(from));
 
 		if(headers!=null){
 			for (String key : headers.keySet()) {
 				String value = headers.get(key);
-				msg.setHeader(key, value);
+				msg.setHeader(singleLine("header name", key), singleLine("header " + key, value));
 			}
 		}
 

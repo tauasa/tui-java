@@ -48,7 +48,12 @@ public class ThreadLocalDAO {
 
 	private static final Logger logger = LoggerFactory.getLogger(ThreadLocalDAO.class);
 
-	protected static final ThreadLocal<JDBCResources> localResources = new ThreadLocal<>();
+	/**
+	 * Per DAO, so two DAOs (and two connection factories) never share a connection.
+	 * Call {@link #closeAll()} in a {@code finally} block, or a pooled thread keeps
+	 * this DAO's connection for its next task.
+	 * */
+	protected final ThreadLocal<JDBCResources> localResources = new ThreadLocal<>();
 
 	protected IConnectionFactory connectionFactory;
 
@@ -248,12 +253,12 @@ public class ThreadLocalDAO {
 			logger.debug("closeAll");
 		}
 
-		JDBCResources resources = getResources();
+		JDBCResources resources = localResources.get();
 
 		if(resources!=null){
+			//remove the JDBCResources from the ThreadLocal instance, even if closing fails
+			localResources.remove();
 			resources.close();
-			//remove the JDBCResources from the ThreadLocal instance
-			localResources.set(null);
 		}
 	}
 

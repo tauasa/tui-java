@@ -136,7 +136,8 @@ public abstract class AbstractFilter implements Filter{
 			final String value = config.getInitParameter(name);
 			map.put(name, value);
 			if (getLogger().isInfoEnabled()) {
-				getLogger().info(String.format("%s=%s", name, value));
+				//names only: a value can be a password or a key
+				getLogger().info(String.format("init-param %s", name));
 			}
 		}
 

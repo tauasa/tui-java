@@ -51,7 +51,8 @@ public abstract class AbstractMailService implements IMailService {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractMailService.class);
 
-	private static final ThreadLocal<Session> sessionLocal = new ThreadLocal<>();
+	/** Per service, so two services never share a session, a server or credentials */
+	private final ThreadLocal<Session> sessionLocal = new ThreadLocal<>();
 
 	public AbstractMailService() {
 

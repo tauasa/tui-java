@@ -39,13 +39,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tauasa.commons.io.XInputStreamReader;
 import org.tauasa.commons.util.Utils;
 import org.tauasa.commons.util.XProperties;
 import org.tauasa.web.ServletHelper;
 
 /**
- * Invokes one or more {@link ISmoketest} implementations
+ * Invokes one or more {@link ISmoketest} implementations.
+ * <p>
+ * The tests can show configuration, query results and host details, and can send
+ * mail, so every request must come from a user in the container role named by
+ * {@value #SMOKETEST_REQUIRED_ROLE_KEY} in {@value #PROPERTIES_FILE}. Without that
+ * setting, or without that role, the servlet answers 403. Map it behind your
+ * container's security constraint as well.
+ * <p>
+ * {@value #SMOKETEST_ALLOW_VIRTUAL_HOST_KEY} only checks the host name in the
+ * request URL, which the client controls through its {@code Host} header. It is not
+ * access control.
  *
  * @author Tauasa Timoteo
  * 
@@ -61,26 +70,19 @@ public class SmoketestServlet extends HttpServlet{
 	public static final String SMOKETEST_RENDERER_KEY = "smoketest.results.renderer";
 	public static final String SMOKETEST_ALLOW_VIRTUAL_HOST_KEY = "smoketest.allow.virtual.host";
 	public static final String SMOKETEST_EXCEPTION_HANDLER = "smoketest.exception.handler";
-
-	public static final String RESOURCE_FILE_PARAM = "_res";
-	private static final String REMOVED_JQUERY_RENDERER = "org.tauasa.web.smoke.JQueryXHTMLRenderer";
-
 	/**
-	 * String array of paths to resources files that may be downloaded
-	 * from this servlet (very limited to ensure security)
+	 * The container role a user must have to run the smoke tests. Without it set,
+	 * every request is refused with 403
 	 * */
-	public static final String[] AUTHORIZED_RESOURCE_FILES = {
-		PROPERTIES_FILE
-		,"/WEB-INF/maven-build.properties"
-		//,"struts-config.xml"
-		//,"jboss-web.xml"
-		//,"web.xml"
-	};
+	public static final String SMOKETEST_REQUIRED_ROLE_KEY = "smoketest.required.role";
+
+	private static final String REMOVED_JQUERY_RENDERER = "org.tauasa.web.smoke.JQueryXHTMLRenderer";
 
 	private XProperties smoketestProperties;
 	private List<Class<? extends ISmoketest>> smokeTests;
 	private ISmoketestResultsRenderer renderer;
 	private boolean allowVirtualHost = true;
+	private String requiredRole;
 	private ISmoketestExceptionHandler exceptionHandler;
 
 	public SmoketestServlet() {
@@ -97,7 +99,12 @@ public class SmoketestServlet extends HttpServlet{
 		}
 
 		try{
-			smoketestProperties = XProperties.loadProperties(getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE));
+			// ClassLoader paths have no leading slash: with one, the lookup returns null
+			java.io.InputStream in = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE.substring(1));
+			if(in==null){
+				throw new ServletException(PROPERTIES_FILE+" is not on the classpath");
+			}
+			smoketestProperties = XProperties.loadProperties(in);
 			if(logger.isDebugEnabled()){
 				logger.debug(String.format("%s\r\n%s", PROPERTIES_FILE, smoketestProperties.toString()));
 			}
@@ -152,6 +159,11 @@ public class SmoketestServlet extends HttpServlet{
 		}catch(ClassNotFoundException | IllegalAccessException | InstantiationException | IllegalArgumentException | InvocationTargetException | SecurityException e){
 			logger.error("Could not create renderer instance of type "+strRenderer, e);
 			throw new ServletException(e);
+		}
+
+		requiredRole = smoketestProperties.getProperty(SMOKETEST_REQUIRED_ROLE_KEY);
+		if(Utils.isEmpty(requiredRole)){
+			logger.error(String.format("%s is not set in %s: every request will be refused", SMOKETEST_REQUIRED_ROLE_KEY, PROPERTIES_FILE));
 		}
 
 		String strAllowVirtualHost = smoketestProperties.getProperty(SMOKETEST_ALLOW_VIRTUAL_HOST_KEY);
@@ -215,41 +227,21 @@ public class SmoketestServlet extends HttpServlet{
 		return b.toString();
 	}
 
-	private void streamResourceFile(ServletHelper helper) throws ServletException, IOException{
-
-		String path = helper.getParam(RESOURCE_FILE_PARAM);
-
-		logger.info("Attempting to download "+path);
-
-		if(!Utils.hasParm(AUTHORIZED_RESOURCE_FILES, path)){
-			String user = helper.getRequest().getRemoteUser();
-			String msg = (user==null?"Client at "+helper.getRemoteAddr():user)+" is not authorized to download "+path;
-			logger.error(msg);
-			throw new ServletException(msg);
-		}
-
-		XInputStreamReader reader = new XInputStreamReader(getClass().getClassLoader().getResourceAsStream(path));
-
-		byte[] content = reader.read();
-
-		//always stream resource as a plain text
-		helper.setContentType("text/plain");
-
-		try (ServletOutputStream out = helper.getOutputStream()) {
-			out.write(content);
-			out.flush();
-		}
-
-	}
-
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		ServletHelper helper = new ServletHelper(super.getServletContext(), req, resp);
 
-		//handle request for streaming a file (i.e. maven-build.properties)
-		if(helper.paramExists(RESOURCE_FILE_PARAM)){
-			streamResourceFile(helper);
+		// Fail closed: without a configured role, or without that role, nobody runs
+		// the tests or sees their output.
+		if(Utils.isEmpty(requiredRole)){
+			logger.error(String.format("Refusing smoketest request: %s is not set in %s", SMOKETEST_REQUIRED_ROLE_KEY, PROPERTIES_FILE));
+			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+		if(!req.isUserInRole(requiredRole)){
+			logger.warn(String.format("Refusing smoketest request from %s: not in role %s", req.getRemoteAddr(), requiredRole));
+			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
 
@@ -264,7 +256,8 @@ public class SmoketestServlet extends HttpServlet{
 		if(!allowVirtualHost &&
 			!helper.getRequestURL().toLowerCase().contains(hostName)){
 			//smoke test is configured to be accessed via real server
-			//name, not a virtual host (i.e. java.tauasa, www.tauasa)
+			//name, not a virtual host (i.e. java.tauasa, www.tauasa).
+			//The client sets the URL's host, so this is a convenience, not access control.
 			logger.error(String.format("Smoketest must be accessed via %s, NOT %s", hostName, helper.getRequestURL()));
 			helper.getResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
 			helper.getResponse().getWriter().println("Access Denied");

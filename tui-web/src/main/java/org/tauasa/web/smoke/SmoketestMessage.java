@@ -29,6 +29,7 @@ import org.tauasa.commons.data.DataModelException;
 import org.tauasa.commons.data.IDataModel;
 import org.tauasa.commons.util.DateUtils;
 import org.tauasa.commons.util.Utils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 
 /**
@@ -238,13 +239,13 @@ public final class SmoketestMessage {
 				if(tableTitle!=null){
 					b.append("<tr bgcolor=\"#FFFFCA\">\r\n")
 					.append("<th colspan=\"").append(columns.length).append("\">")
-					.append(tableTitle).append("</th>\r\n")
+					.append(esc(tableTitle)).append("</th>\r\n")
 					.append("</tr>\r\n");
 				}
 
 				b.append("<tr bgcolor=\"#EEEEEE\">\r\n");
 				for (String column : columns) {
-					b.append("<th>").append(column).append("</th>");
+					b.append("<th>").append(esc(column)).append("</th>");
 				}
 				b.append("\r\n</tr>\r\n");
 
@@ -253,7 +254,7 @@ public final class SmoketestMessage {
 
 					for(int i=0;i<columns.length;i++){
 						Object value = data.getObject(i);
-						b.append("<td>").append(value==null?"":value.toString()).append("&nbsp;</td>");
+						b.append("<td>").append(value==null?"":esc(value.toString())).append("&nbsp;</td>");
 					}
 
 					b.append("\r\n</tr>\r\n");
@@ -281,19 +282,32 @@ public final class SmoketestMessage {
 			return new StringBuilder()
 			.append("<!-- ").append(getClass().getName()).append(" -->\r\n")
 			.append("<pre>")
-			.append(msg.getValue().toString())
+			.append(esc(msg.getValue().toString()))
 			.append("</pre>").toString();
 		}
 	}
 
+	/**
+	 * Escapes text for HTML, so a value from a database row or a config file
+	 * can't add markup or script to the page
+	 * */
+	static String esc(String s){
+		return s==null ? "" : StringEscapeUtils.escapeHtml(s);
+	}
 
+
+	/**
+	 * Escapes the value for HTML, and links it when it's an {@code http} or {@code https} URL
+	 * */
 	public static String formatLink(String value){
-		if(!value.toLowerCase().startsWith("http")){
-			return value;
+		String escaped = esc(value);
+		String lower = value==null ? "" : value.toLowerCase();
+		if(!lower.startsWith("http://") && !lower.startsWith("https://")){
+			return escaped;
 		}
 		return new StringBuilder()
-		.append("<a href=\"").append(value).append("\">")
-		.append(value)
+		.append("<a href=\"").append(escaped).append("\">")
+		.append(escaped)
 		.append("</a>").toString();
 	}
 
@@ -341,7 +355,7 @@ public final class SmoketestMessage {
 
 			if(tableTitle!=null){
 				b.append("<tr bgcolor=\"#FFFFCA\">\r\n")
-				.append("<th colspan=\"2\">").append(tableTitle).append("</th>\r\n")
+				.append("<th colspan=\"2\">").append(esc(tableTitle)).append("</th>\r\n")
 				.append("</tr>\r\n");
 			}
 
@@ -352,7 +366,7 @@ public final class SmoketestMessage {
 			for (String row : rows) {
 				String[] cols = Utils.split(row, "=");
 				b.append("<tr>\r\n")
-				.append("<td>").append(cols[0]).append("</td><td>").append(cols.length > 1 ? formatLink(cols[1]) : "").append("&nbsp;</td>\r\n")
+				.append("<td>").append(esc(cols[0])).append("</td><td>").append(cols.length > 1 ? formatLink(cols[1]) : "").append("&nbsp;</td>\r\n")
 				.append("</tr>\r\n");
 			}
 
