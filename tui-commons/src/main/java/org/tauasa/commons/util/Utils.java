@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import com.google.common.base.Throwables;
 
 /**
  * Static utility methods
@@ -514,7 +513,12 @@ public class Utils {
 	 * Returns the inner-most {@link Throwable}
 	 * */
 	public static Throwable getRootCause(Throwable t){
-		return Throwables.getRootCause(t);
+		Throwable root = t;
+		java.util.Set<Throwable> seen = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+		while(root.getCause()!=null && seen.add(root)){
+			root = root.getCause();
+		}
+		return root;
 	}
 	
 	/**
@@ -522,7 +526,18 @@ public class Utils {
 	 * of {@link RuntimeException} or {@link Error}
 	 * */
 	public static <X extends Throwable> void propogate(Throwable t, Class<X> type)throws X{
-		Throwables.propagateIfPossible(t, type);
+		if(t==null){
+			return;
+		}
+		if(type.isInstance(t)){
+			throw type.cast(t);
+		}
+		if(t instanceof RuntimeException){
+			throw (RuntimeException)t;
+		}
+		if(t instanceof Error){
+			throw (Error)t;
+		}
 	}
 	
 	/**
@@ -530,14 +545,22 @@ public class Utils {
 	 * of {@link RuntimeException} or {@link Error}
 	 * */
 	public static RuntimeException propogate(Throwable t){
-		return Throwables.propagate(t);
+		if(t instanceof RuntimeException){
+			throw (RuntimeException)t;
+		}
+		if(t instanceof Error){
+			throw (Error)t;
+		}
+		throw new RuntimeException(t);
 	}
 
 	/**
 	 * Returns the stack trace of the specified Throwable
 	 * */
 	public static final String getStackTrace(Throwable t){
-		return Throwables.getStackTraceAsString(t);
+		java.io.StringWriter out = new java.io.StringWriter();
+		t.printStackTrace(new java.io.PrintWriter(out, true));
+		return out.toString();
 		/*
 		java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
 		t.printStackTrace(new java.io.PrintWriter(out, true));

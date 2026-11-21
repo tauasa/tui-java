@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.tauasa</groupId>
 		<artifactId>tui-java</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.2-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -22,13 +22,18 @@
 		<dependency>
 			<groupId>org.tauasa</groupId>
 			<artifactId>tui-mail</artifactId>
-			<version>1.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.tauasa</groupId>
 			<artifactId>tui-commons</artifactId>
-			<version>1.0.0</version>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
 		</dependency>
 
 		<dependency>

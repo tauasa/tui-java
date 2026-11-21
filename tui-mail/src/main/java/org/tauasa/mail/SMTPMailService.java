@@ -58,9 +58,11 @@ public final class SMTPMailService extends AbstractMailService{
 	private static final Logger logger = LoggerFactory.getLogger(SMTPMailService.class);
 	
 	public static enum Property{
-		USER("mail.smtp.user","no-reply@tauasa.org"),
-		FROM("mail.smtp.from","no-reply@tauasa.org"),
-		HOST("mail.smtp.host","smtp.tauasa.org"),
+		// No default user, sender or host: mail must never go to a server the
+		// app didn't name.
+		USER("mail.smtp.user",null),
+		FROM("mail.smtp.from",null),
+		HOST("mail.smtp.host",null),
 		PORT("mail.smtp.port","25"),
 		CONNECTION_TIMEOUT("mail.smtp.connectiontimeout","2000"),
 		READ_TIMEOUT("mail.smtp.timeout","1000"),
@@ -104,36 +106,47 @@ public final class SMTPMailService extends AbstractMailService{
 	}
 
 	/**
-	 * Creates a {@link Properties} object from {@link System#getProperties()}, puts  
-	 * this service's attributes keyed under the appropriate {@link Property} and ultimately 
-	 * invokes {@link Session#getDefaultInstance(Properties)}
+	 * Copies {@link System#getProperties()}, puts this service's attributes over it keyed
+	 * under the appropriate {@link Property}, and creates a new {@link Session} from the
+	 * copy with {@link Session#getInstance(Properties)}. The system properties themselves
+	 * are never changed, and each service gets its own session.
+	 *
+	 * @throws MessagingException if no SMTP host is set, here or in the {@code mail.smtp.host} system property
 	 * */
 	@Override
 	public Session createSession()throws MessagingException{
 		if(logger.isDebugEnabled()){
 			logger.debug(String.format("Creating JavaMail Session on host %s", host));
 		}
-		//get system properties
-		Properties props = System.getProperties();
+		//copy the system properties, so changes here stay in this session
+		Properties props = new Properties();
+		props.putAll(System.getProperties());
 		
 		//decorate with our attributes or reasonable default
-		props.put(Property.USER.key(), user!=null?user:Property.USER.def());
-		props.put(Property.FROM.key(), from!=null?from:Property.FROM.def());
-		props.put(Property.HOST.key(), host!=null?host:Property.HOST.def());
+		if(user!=null){
+			props.put(Property.USER.key(), user);
+		}
+		if(from!=null){
+			props.put(Property.FROM.key(), from);
+		}
+		if(host!=null){
+			props.put(Property.HOST.key(), host);
+		}
+		if(props.getProperty(Property.HOST.key())==null){
+			throw new MessagingException("No SMTP host: call setHost or set the " + Property.HOST.key() + " system property");
+		}
 		props.put(Property.PORT.key(), port>0?port:Property.PORT.defInt());
 		props.put(Property.CONNECTION_TIMEOUT.key(), connectionTimeoutMs>0?connectionTimeoutMs:Property.CONNECTION_TIMEOUT.defInt());
 		props.put(Property.READ_TIMEOUT.key(), readTimeoutMs>0?readTimeoutMs:Property.READ_TIMEOUT.defInt());
 		props.put(Property.WRITE_TIMEOUT.key(), writeTimeoutMs>0?writeTimeoutMs:Property.WRITE_TIMEOUT.defInt());
 		
 		if(logger.isDebugEnabled()){
+			//names only: values can hold a password
 			List<String> mailProps = XProperties.getMatchingKeys(props, "mail.smtp{1}[\\.\\w]*");
-			logger.debug("Foud "+mailProps.size()+" smtp properties");
-			for (String prop : mailProps) {
-				logger.debug(prop+"="+props.getProperty(prop));
-			}
+			logger.debug("Found "+mailProps.size()+" smtp properties: "+mailProps);
 		}
 		
-		return Session.getDefaultInstance(props);
+		return Session.getInstance(props);
 	}
 
 	

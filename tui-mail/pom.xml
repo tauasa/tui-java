@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.tauasa</groupId>
 		<artifactId>tui-java</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.2-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -20,13 +20,26 @@
 		<dependency>
 			<groupId>org.tauasa</groupId>
 			<artifactId>tui-commons</artifactId>
-			<version>1.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>javax.mail-api</artifactId>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>javax.activation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- A real JavaMail implementation, so tests can build MimeMessages. -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

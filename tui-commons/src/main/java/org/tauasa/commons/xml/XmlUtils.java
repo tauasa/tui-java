@@ -65,7 +65,8 @@ public class XmlUtils extends Utils {
 	public static final String XML_VERSION = "1.0";
 	public static final String ENCODING = "UTF-8";
 	public static final String DEFAULT_DATE_FORMAT_ATTRIBUTE_NAME = "format";
-	public static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+	/** Private, so no caller can switch off the DOCTYPE and external-entity protection for everyone */
+	private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 	public static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
 
 	static {

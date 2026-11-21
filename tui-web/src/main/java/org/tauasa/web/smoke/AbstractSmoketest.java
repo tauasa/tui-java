@@ -152,7 +152,7 @@ public abstract class AbstractSmoketest implements ISmoketest {
 		getLogger().info("Description: "+description);
 
 		//set the verbose attribute
-		verbose = getBooleanProperty(smoketestProperties, VERBOSE_KEY, true);
+		verbose = getBooleanProperty(smoketestProperties, VERBOSE_KEY, false);//off unless asked: verbose output shows query rows and settings
 		getLogger().info("Verbose: "+verbose);
 
 		try{

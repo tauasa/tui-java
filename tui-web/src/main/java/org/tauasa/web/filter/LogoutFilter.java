@@ -24,6 +24,8 @@
 package org.tauasa.web.filter;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.servlet.Filter;
@@ -83,7 +85,9 @@ public class LogoutFilter extends AbstractFilter {
 			StringBuilder b = new StringBuilder();
 			for(int i=0;i<names.size();i++){
 				String name = names.get(i);
-				b.append(name).append("=").append(helper.getParam(name));
+				String value = helper.getParam(name);
+				b.append(URLEncoder.encode(name, StandardCharsets.UTF_8)).append("=")
+				 .append(URLEncoder.encode(value==null ? "" : value, StandardCharsets.UTF_8));
 				if(i!=names.size()-1){
 					b.append("&");
 				}
