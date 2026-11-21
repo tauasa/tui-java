@@ -46,6 +46,11 @@ class HTTPUtilsTest {
 				os.write(out);
 			}
 		});
+		server.createContext("/redirect", ex -> {
+			ex.getResponseHeaders().add("Location", base + "/echo");
+			ex.sendResponseHeaders(302, -1);
+			ex.close();
+		});
 		server.createContext("/slow", ex -> {
 			try {
 				Thread.sleep(3000);
@@ -88,6 +93,21 @@ class HTTPUtilsTest {
 		HTTPUtils.postPayload(base + "/echo", new HTTPUtils.Payload("<x/>", "text/xml"));
 		assertEquals("<x/>", lastBody.get());
 		assertEquals("text/xml", lastType.get());
+	}
+
+	@Test
+	void getWithoutCredentialsFollowsARedirect() throws Exception {
+		assertEquals(200, HTTPUtils.doGet(base + "/redirect").getStatus());
+		assertEquals(1, hits.get());
+	}
+
+	@Test
+	void postsNeverFollowARedirect() throws Exception {
+		HTTPUtils.Payload payload = new HTTPUtils.Payload("<x/>", "text/xml");
+		payload.addHeader("Authorization", "Bearer secret-token");
+		assertEquals(302, HTTPUtils.postPayload(base + "/redirect", payload).getStatus());
+		assertEquals(302, HTTPUtils.doPost(base + "/redirect", Map.of("a", "b")).getStatus());
+		assertEquals(0, hits.get());
 	}
 
 	@Test

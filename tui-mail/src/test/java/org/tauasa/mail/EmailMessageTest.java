@@ -35,6 +35,34 @@ class EmailMessageTest {
 	}
 
 	@Test
+	void refusesALineBreakInARecipientNameOrTheFromAddress() throws Exception {
+		assertThrows(javax.mail.internet.AddressException.class,
+				() -> new Recipient("to@example.com", "Bob\r\nBcc: victim@example.com"));
+		assertThrows(javax.mail.internet.AddressException.class,
+				() -> new Recipient("to@example.com", "Bob\nBcc: victim@example.com", Message.RecipientType.CC));
+		EmailMessage m = new EmailMessage("to@example.com", "from@example.com", "Hi", "body");
+		m.setFrom("from@example.com\r\nBcc: victim@example.com");
+		assertThrows(MessagingException.class, () -> m.toMessage(SESSION));
+	}
+
+	@Test
+	void messagesFromATemplateDontShareRecipients() throws Exception {
+		EmailMessage template = new EmailMessage("first@example.com", "from@example.com", "Hi", "body");
+		template.addHeader("X-Test", "one");
+		EmailMessage toB = new EmailMessage(template, "b@example.com");
+		EmailMessage toC = new EmailMessage(template, "c@example.com");
+		toB.addHeader("X-Only-B", "yes");
+
+		assertEquals(1, template.getRecipients().size());
+		assertEquals(2, toB.getRecipients().size());
+		assertEquals(2, toC.getRecipients().size());
+		assertEquals("c@example.com", toC.getRecipients().get(1).getAddress().toString());
+		assertNull(template.getHeaders().get("X-Only-B"));
+		assertNull(toC.getHeaders().get("X-Only-B"));
+		assertEquals("one", toC.getHeaders().get("X-Test"));
+	}
+
+	@Test
 	void refusesALineBreakInAHeaderNameOrValue() throws Exception {
 		EmailMessage value = new EmailMessage("to@example.com", "from@example.com", "Hi", "body");
 		value.addHeader("X-Test", "a\r\nBcc: victim@example.com");

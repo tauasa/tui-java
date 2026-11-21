@@ -222,7 +222,7 @@ public final class SmoketestMessage {
 			if(!(msg.getValue() instanceof IDataModel)){
 				return new StringBuilder()
 				.append("<pre>")
-				.append(msg.getValue().toString())
+				.append(esc(msg.getValue().toString()))
 				.append("</pre>").toString();
 			}
 
@@ -264,7 +264,7 @@ public final class SmoketestMessage {
 
 				return b.toString();
 			}catch(DataModelException e){
-				return Utils.getStackTrace(e);
+				return "<pre>" + esc(Utils.getStackTrace(e)) + "</pre>";
 			}
 		}
 	}

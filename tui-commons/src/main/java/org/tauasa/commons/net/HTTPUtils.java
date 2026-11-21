@@ -77,7 +77,9 @@ public class HTTPUtils {
 	}
 
 	/**
-	 * Posts a payload, usually an XML/SOAP document, to the specified URL
+	 * Posts a payload, usually an XML/SOAP document, to the specified URL. Redirects
+	 * aren't followed: a redirect would carry the payload's headers, which can hold
+	 * credentials, to another host, and turn the POST into a GET
 	 * */
 	public static HttpResponse postPayload(String strUrl, Payload payload, Configuration config)throws IOException, InterruptedException{
 		if(logger.isDebugEnabled()){
@@ -95,7 +97,7 @@ public class HTTPUtils {
 				}
 			});
 		}
-		return execute(createHttpClient(config), req.build());
+		return execute(createHttpClient(config, HttpClient.Redirect.NEVER), req.build());
 	}
 
 	/**
@@ -107,7 +109,8 @@ public class HTTPUtils {
 
 	/**
 	 * Posts the parameters to the specified URL as an
-	 * {@code application/x-www-form-urlencoded} form
+	 * {@code application/x-www-form-urlencoded} form. Redirects aren't followed, as
+	 * for {@link #postPayload(String, Payload, Configuration)}
 	 * */
 	public static HttpResponse doPost(String strUrl, Map<String, ?> parameters, Configuration config)throws IOException, InterruptedException{
 		if(logger.isDebugEnabled()){
@@ -122,7 +125,7 @@ public class HTTPUtils {
 				.header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 				.POST(HttpRequest.BodyPublishers.ofString(form.toString(), StandardCharsets.UTF_8))
 				.build();
-		return execute(createHttpClient(config), req);
+		return execute(createHttpClient(config, HttpClient.Redirect.NEVER), req);
 	}
 
 	/**

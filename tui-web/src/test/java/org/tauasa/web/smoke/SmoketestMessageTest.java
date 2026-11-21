@@ -42,6 +42,12 @@ class SmoketestMessageTest {
 	}
 
 	@Test
+	void dataModelFormatterEscapesAPlainValue() {
+		String html = new SmoketestMessage.DataModelFormatter().format(new SmoketestMessage(XSS));
+		assertFalse(html.contains("<script>"), html);
+	}
+
+	@Test
 	void propertiesKeysAndValuesAreEscaped() {
 		String html = new SmoketestMessage.HTMLPropertiesFormatter().format(
 				new SmoketestMessage("<b>key</b>=" + XSS));

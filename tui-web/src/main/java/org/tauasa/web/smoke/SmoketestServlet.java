@@ -106,7 +106,8 @@ public class SmoketestServlet extends HttpServlet{
 			}
 			smoketestProperties = XProperties.loadProperties(in);
 			if(logger.isDebugEnabled()){
-				logger.debug(String.format("%s\r\n%s", PROPERTIES_FILE, smoketestProperties.toString()));
+				//names only: values can be passwords
+				logger.debug(String.format("%s keys: %s", PROPERTIES_FILE, smoketestProperties.stringPropertyNames()));
 			}
 
 		}catch(IOException e){

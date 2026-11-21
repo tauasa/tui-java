@@ -61,13 +61,19 @@ Several of these change behavior. Read them before upgrading.
   commons-httpclient 3.1. HTTPS certificates and host names are always checked,
   every request times out after 30 seconds unless you set another timeout, and
   Basic credentials are refused over plain `http://` and never follow a redirect.
+  POSTs don't follow redirects at all, so headers you add can't reach another host.
   `createHttpClient` now returns a `java.net.http.HttpClient`. The geocoders
   default to HTTPS.
 - **`SMTPMailService` has no default server.** Call `setHost` or set
   `mail.smtp.host`; it no longer falls back to `smtp.tauasa.org`. It doesn't
   change `System` properties any more, and each service keeps its own session.
-- **Mail subjects and headers with a line break are refused**, so user input
-  can't add a `Bcc` or other headers.
+- **Mail subjects, headers, recipient names and the from address with a line
+  break are refused**, so user input can't add a `Bcc` or other headers.
+  `new EmailMessage(template, to)` copies the template's recipients, headers and
+  attachments, so messages made from one template don't collect each other's
+  recipients.
+- **`XmlUtils.DOCUMENT_BUILDER_FACTORY` is private**, so no code can switch off
+  its DOCTYPE and external-entity protection.
 - **`XPathUtils.evaluate(InputStream|InputSource, ...)`** parses with the
   hardened parser that refuses DOCTYPEs and external entities, and now declares
   the parser's exceptions.
@@ -77,7 +83,8 @@ Several of these change behavior. Read them before upgrading.
   `LogoutFilter` URL-encodes the parameters it copies into its redirect.
 - **`ThreadLocalDAO` keeps one connection per DAO**, not one shared by every DAO on
   the thread. Call `closeAll()` in a `finally` block.
-- No password or init-param value is written to the logs.
+- No password, init-param value, SQL bind value or `smoketest.properties`
+  value is written to the logs.
 - Dependencies: Guava, Guice, opencsv, statsd and commons-httpclient are gone.
   Spring and secondstring are optional. The modules depend on each other at the
   same version, and every version is pinned.

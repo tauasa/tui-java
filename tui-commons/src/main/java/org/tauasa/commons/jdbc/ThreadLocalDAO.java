@@ -23,7 +23,6 @@
  */
 package org.tauasa.commons.jdbc;
 
-import org.tauasa.commons.util.Utils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -157,7 +156,8 @@ public class ThreadLocalDAO {
 	public ResultSet executeQuery(String sqlQuery, Object[] args) throws SQLException{
 
 		if(logger.isDebugEnabled()){
-			logger.debug(String.format("executeQuery(\"%s\", [%s])", sqlQuery, args!=null?Utils.join(args, ", "):"null"));
+			//the count only: bind values can be passwords or personal data
+			logger.debug(String.format("executeQuery(\"%s\", %d args)", sqlQuery, args==null?0:args.length));
 		}
 
 		//get or prepare statement
@@ -217,7 +217,8 @@ public class ThreadLocalDAO {
 	public int executeUpdate(String sqlUpdate, Object[] args) throws SQLException{
 
 		if(logger.isDebugEnabled()){
-			logger.debug(String.format("executeUpdate(\"%s\", [%s])", sqlUpdate, args!=null?Utils.join(args, ", "):"null"));
+			//the count only: bind values can be passwords or personal data
+			logger.debug(String.format("executeUpdate(\"%s\", %d args)", sqlUpdate, args==null?0:args.length));
 		}
 
 		//prepare a statement
